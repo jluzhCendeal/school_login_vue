@@ -33,18 +33,19 @@
             </mu-col>
         </mu-row>
         <mu-flex justify-content="center" align-items="center">
-            <mu-button round color="red" @click="doSomething">查询</mu-button>
+            <mu-button round color="red" @click="doSomething">{{btn_name}}</mu-button>
         </mu-flex>
     </div>
 </template>
 
 <script>
     export default {
-        name: "ScoreSelection",
+        name: "Selection",
         props:{
             grades: Array,
             terms:Array,
             user: Object,
+            btn_name:String
         },
         methods:{
             doSomething:function () {
