@@ -1,8 +1,8 @@
 <template>
-    <div class="table-contain">
+    <div class="table-contain" style="position: relative">
         <!--课表主体-->
         <div class="table-main">
-            <mu-paper :z-depth="2" style="position:fixed;z-index:999;top: 56px">
+            <mu-paper :z-depth="2" style="position:fixed;z-index:10;top: 54px">
                 <table class="table-center">
                     <tr class="table-center">
                         <td class="table-first" rowspan="2">
@@ -19,7 +19,7 @@
                     </tr>
                 </table>
             </mu-paper>
-            <mu-paper :z-depth="1" style="margin-bottom:30px;position: relative;top: 46px">
+            <mu-paper :z-depth="2" style="margin-bottom:30px;position: relative;top: 46px">
                 <swiper style="margin: 0px" :options="swiperOption" ref="mySwiper">
 
                     <swiper-slide v-for="i in 3">
@@ -176,7 +176,7 @@
             getSchedule: getScheduleJs,
             getCurrentWeek: getCurrentWeek,
 
-            jsonpCallback: (json) => {
+            jsonpCallback: function(json) {
             },
             callbackSchedule: function (json) {
                 if (json.code == 0) {
@@ -195,6 +195,12 @@
             callbackCurrentWeek: function (json) {
                 this.$jluzhLocalStorage.setItem('jluzh_current_week', json.weeks, this.getCurrentWeekExpiration())
                 this.$store.commit('updateWeek', Number(json.weeks))
+            },
+            callbackLogin: function (json) {
+                if (json.code == 0) {
+                    sessionStorage.setItem('jluzh_is_login', true)
+                }
+
             },
 
             nextPage: function () {

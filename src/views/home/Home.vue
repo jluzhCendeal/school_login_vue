@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mu-appbar :style="'width: 100%;color:'+nav_style.color" :title="app_title" :color="bar_color">
+        <mu-appbar :style="'width: 100%;height:56px;color:'+nav_style.color" :title="app_title" :color="bar_color">
             <mu-menu slot="right">
                 <mu-button flat @click="closeBottomSheet">菜单</mu-button>
             </mu-menu>
@@ -94,7 +94,8 @@
             },
             resize() {
                 this.height = `${document.documentElement.clientHeight}`
-                this.$refs.main.style.height = (this.height - 56 * 2) + 'px';
+                let bar_height = `${document.documentElement.getElementsByClassName('mu-appbar')[0].getAttribute('style')}`
+                this.$refs.main.style.height = (this.height - 56*2) + 'px';
             },
 
             getSelection: getSelection,
@@ -155,11 +156,17 @@
                     if (is_login != null || is_login != undefined) {
                         this.getSelection().then(this.callbackSelection)
                     } else {
-                        this.login()
-                            .then(this.callbackLogin)
-                            .then(() => {
-                                this.getSelection().then(this.callbackSelection)
-                            })
+                        let token = this.$jluzhLocalStorage.getItem('token')
+                        if (token != null) {
+                            this.login()
+                                .then(this.callbackLogin)
+                                .then(() => {
+                                    this.getSelection().then(this.callbackSelection)
+                                })
+                        }else{
+                            this.selection_dialog=false
+                            this.$toast.info({message: '未绑定！', position: 'top'})
+                        }
                     }
                 }
             }
@@ -169,8 +176,7 @@
         },
         mounted() {
 
-            let height = `${document.documentElement.clientHeight}`
-            this.$refs.main.style.height = (height - 56 * 2) + 'px';
+            this.resize()
             let shifts = this.$router.history.current.path
             let point_to = {
                 '/jluzh/schedule': 'schedule',

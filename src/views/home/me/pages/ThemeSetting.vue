@@ -211,6 +211,9 @@
                     float_btn_bg_colors: {
                         red: 'red',
                         sky: '#42a5f5',
+                        white: "white",
+                        yellow: '#ffeb3b',
+                        cute_pink: '#ec407a',
                         light_green: '#76ff03'
                     },
                     float_btn_text_colors:{

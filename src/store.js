@@ -11,7 +11,7 @@ const store = new Vuex.Store({
             nav_style: {
                 backgroundColor: 'rgb(244, 67, 54)',
                 color: 'white',
-                'z-index': 99999
+                'z-index': 999
             },
             nav_active_color: 'green',
 
