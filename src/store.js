@@ -9,14 +9,14 @@ const store = new Vuex.Store({
         app_host: 'http://www.cendeal.cn:5001/jlu/api',
         theme: {
             nav_style: {
-                'background-color': 'rgb(244, 67, 54)',
-                'color': 'white',
+                backgroundColor: 'rgb(244, 67, 54)',
+                color: 'white',
                 'z-index': 99999
             },
             nav_active_color: 'green',
 
             head_pic_style: {
-                'background-color': '#ffca28',
+                backgroundColor: '#ffca28',
                 'position': 'relative',
                 'top': '8px'
             },
@@ -37,7 +37,7 @@ const store = new Vuex.Store({
             u_auth: '/auth',
             u_logout: '/logout'
         },
-        course_data: [],
+        jluzh_courses: '',
         current_week:1,
 
     },
@@ -46,7 +46,7 @@ const store = new Vuex.Store({
             return state.theme.nav_style
         },
         barColor: state => {
-            return state.theme.nav_style["background-color"]
+            return state.theme.nav_style.backgroundColor
         },
         urlPaths: state => {
             return state.url_paths
@@ -73,13 +73,13 @@ const store = new Vuex.Store({
                 state.theme.nav_active_color = theme.nav_active_color
 
             if (theme.hasOwnProperty("nav_bg"))
-                state.theme.nav_style["background-color"] = theme.nav_bg
+                state.theme.nav_style.backgroundColor = theme.nav_bg
 
             if (theme.hasOwnProperty('nav_text_color'))
                 state.theme.nav_style.color = theme.nav_text_color
 
             if (theme.hasOwnProperty('head_pic_bg'))
-                state.head_pic_style["background-color"] = theme.head_pic_bg
+                state.theme.head_pic_style.backgroundColor = theme.head_pic_bg
 
             if (theme.hasOwnProperty('head_pic_text_color'))
                 state.theme.head_text_style.color = theme.head_pic_text_color
@@ -92,6 +92,11 @@ const store = new Vuex.Store({
         },
         updateWeek:function (state,week) {
             state.current_week = week
+        },
+        updateCourses:function (state,courses) {
+            if(courses==null)
+            delete localStorage['jluzh_courses']
+            state.jluzh_courses = courses
         }
     },
     actions: {}

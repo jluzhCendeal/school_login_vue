@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mu-appbar style="width: 100%;" :title="app_title" :color="bar_color">
+        <mu-appbar :style="'width: 100%;color:'+nav_style.color" :title="app_title" :color="bar_color">
             <mu-menu slot="right">
                 <mu-button flat @click="closeBottomSheet">菜单</mu-button>
             </mu-menu>
@@ -59,9 +59,10 @@
 </template>
 
 <script>
-    import {loginjs} from '@/assets/login.js'
-    import {getScheduleJs, getCurrentWeek} from '@/assets/getSchedule'
     import Selection from '@/components/Selection'
+    // 导入js
+    import {getSelection} from "../../assets/util/jluzhRequest";
+    import {getScheduleExpiration} from "../../assets/util/jluzhStoreExpiration";
 
     export default {
         name: "Home",
@@ -91,41 +92,37 @@
         methods: {
             jsonpCallback: json => {
             },
-            loginjs: loginjs,
             resize() {
                 this.height = `${document.documentElement.clientHeight}`
                 this.$refs.main.style.height = (this.height - 56 * 2) + 'px';
             },
-            getScheduleJs: getScheduleJs,
-            getCurrentWeek: getCurrentWeek,
 
-            callback: function (json) {
+            getSelection: getSelection,
+            getScheduleExpiration: getScheduleExpiration,
+
+            callbackSelection: function (json) {
                 if (json.code == 0) {
-                    let list = json.data
-                    if (list != undefined) {
-                        localStorage.setItem('jlu_courses', JSON.stringify(list.list))
-                        location.reload()
-                        this.$toast.info({message: "更新成功！", position: 'top'})
-                    } else {
-                        this.$toast.info({message: json.msg, position: 'top'})
-                    }
-
+                    this.$jluzhLocalStorage.setItem('score_selection', JSON.stringify(json.data), this.getScheduleExpiration())
+                    this.selection_data = json.data
                 }
             },
-            callbackCurrentWeek: function (json) {
-                this.$store.commit('updateWeek', Number(json.weeks))
-            },
             callbackLogin: function (json) {
-                this.$progress.done()
-                sessionStorage.setItem('token', 'true')
+                if (json.code == 0) {
+                    sessionStorage.setItem('jluzh_is_login', true)
+                }
+
             },
+
+            getNames: function (obj, index = 0) {
+                let keys = []
+                for (let i = index; i < obj.length; i++) {
+                    keys.push(Object.keys(obj[i])[0])
+                }
+                return keys
+            },
+
             closeBottomSheet() {
                 this.open = !this.open
-            },
-            updateSchedule: function () {
-                let Grade = localStorage.getItem('schedule_grade')
-                let term = localStorage.getItem('schedule_term')
-                this.getScheduleJs(Grade, term).then(this.callback)
             },
             closeSelectionDialog() {
                 this.selection_dialog = !this.selection_dialog
@@ -134,54 +131,43 @@
                 }
 
             },
+            updateSchedule: function () {
+                this.$store.commit('updateCourses', null)
+            },
+
+
+            //修改时间：2019/3/7
             nextDo() {
-                localStorage.setItem('schedule_grade', this.user.grade + 1)
-                localStorage.setItem('schedule_term', this.user.term + 1)
+                this.$jluzhLocalStorage.setItem('schedule_grade', this.user.grade + 1,this.getScheduleExpiration())
+                this.$jluzhLocalStorage.setItem('schedule_term', this.user.term + 1,this.getScheduleExpiration())
+                this.selection_dialog=false
                 this.updateSchedule()
             },
-            getNames: function (obj, index = 0) {
-                let keys = []
-                for (let i = index; i < obj.length; i++) {
-                    keys.push(Object.keys(obj[i])[0])
-                }
-                return keys
-            },
+
             initSelection() {
-                let temp = sessionStorage.getItem('home_selection')
+                let temp = this.$jluzhLocalStorage.getItem('score_selection')
                 if (temp != null || temp != undefined) {
                     this.selection_data = JSON.parse(temp)
                     this.user.grade = this.selection_data.current.Grade - 1
                     this.user.term = this.selection_data.current.term - 1
                 } else {
-                    this.$jsonp(this.$store.state.app_host + this.$store.getters.urlPaths.u_lines,
-                        {callbackName: 'jsonpCallback'}).then(json => {
-                        if (json.code == 0) {
-                            sessionStorage.setItem('home_selection', JSON.stringify(json.data))
-                            this.selection_data = json.data
-                        }
-                    })
-                }
-            },
-            initSchedule: function () {
-                let temp = localStorage.getItem('jlu_courses')
-                if (temp == null || temp == undefined) {
-                    this.getScheduleJs().then(this.callback)
+                    let is_login = sessionStorage.getItem('jluzh_is_login')
+                    if (is_login != null || is_login != undefined) {
+                        this.getSelection().then(this.callbackSelection)
+                    } else {
+                        this.login()
+                            .then(this.callbackLogin)
+                            .then(() => {
+                                this.getSelection().then(this.callbackSelection)
+                            })
+                    }
                 }
             }
         },
-        created() {},
+        created() {
+            this.$store.commit('initTheme')
+        },
         mounted() {
-            this.getCurrentWeek()
-                .then(this.callbackCurrentWeek).then(
-                () => {
-                    this.$progress.start()
-                    this.loginjs().then(this.callbackLogin)
-                        .then(this.initSchedule)
-                }
-            )
-
-
-
 
             let height = `${document.documentElement.clientHeight}`
             this.$refs.main.style.height = (height - 56 * 2) + 'px';
@@ -198,8 +184,6 @@
                 this.$router.push('/jluzh/schedule')
             }
             this.shift = current_state
-
-
         }
     }
 </script>

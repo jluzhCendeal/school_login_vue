@@ -1,14 +1,14 @@
 <template>
     <div class="login-view">
         <div>
-            <mu-appbar style="width: 100%;" :title="app_title" :color="bar_color">
+            <mu-appbar :style="'width: 100%;color:'+nav_style.color" :title="app_title" :color="nav_style.backgroundColor">
                 <mu-button icon slot="left" to="/jluzh/me">
                     <mu-icon value="navigate_before"></mu-icon>
                 </mu-button>
             </mu-appbar>
         </div>
 
-        <mu-paper :z-depth="1">
+        <mu-paper :z-depth="1" style="margin-top: 8px">
             <mu-form ref="form" :model="validateForm" style="padding: 15px">
                 <p>吉林大学珠海学院教务系统-模拟登陆</p>
 
@@ -54,7 +54,7 @@
             return {
                 app_title: this.$store.state.app_title + '-绑定',
                 nav_style: this.$store.getters.navStyle,
-                bar_color: this.$store.getters.barColor,
+
                 usernameRules: [
                     {validate: (val) => !!val, message: '必须填写用户名'},
                     {validate: (val) => val.length >= 3, message: '用户名长度大于3'}
@@ -78,6 +78,7 @@
             jsonpCallback:json =>{},
             submit() {
                 this.$refs.form.validate().then((result) => {
+
                     if (result) {
                         this.$jsonp(this.$store.state.app_host + this.$store.getters.urlPaths.u_login, {
                             yhm: this.validateForm.yhm,
@@ -85,12 +86,14 @@
                             callbackName: 'jsonpCallback'
                         },).then(json => {
                             if (json.code == '0') {
+                                this.clean(false)
                                 this.$toast.success({message:'已绑定!',position:'top'})
-                                this.clean()
-                                localStorage.setItem('token',json.data.token)
+                                this.$jluzhLocalStorage.setItem('token',json.data.token)
+                                sessionStorage.setItem('jluzh_is_login',true)
+
                                 localStorage.setItem('username',this.validateForm.yhm)
                                 this.progress = false
-                                location.href = '/jluzh/me'
+                                this.$router.push('/jluzh/me')
 
                             } else {
                                 this.$toast.error({message:'绑定失败!',position:'top'})
@@ -115,12 +118,15 @@
                     isAgree: false
                 };
             },
-            clean(){
+            clean(flag=true){
                 localStorage.clear()
                 sessionStorage.clear()
-                this.$jsonp(this.$store.state.app_host + this.$store.getters.urlPaths.u_logout,{
-                    callbackName: 'jsonpCallback'
-                })
+                if(flag){
+                    this.$jsonp(this.$store.state.app_host + this.$store.getters.urlPaths.u_logout,{
+                        callbackName: 'jsonpCallback'
+                    })
+                }
+
             },
 
             openAlertDialog:function () {

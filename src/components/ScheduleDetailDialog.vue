@@ -1,6 +1,6 @@
 <template>
-    <mu-dialog width="350" height="350" scrollable :open.sync="openDetail" ref="detail_dialog">
-        <mu-list style="margin: 0px;padding: 0px">
+    <mu-dialog width="350" height="350" scrollable :open.sync="isShow" ref="detail_dialog">
+        <mu-list style="margin: 0px;padding: 0px;">
             <mu-sub-header style="font-size: 12px;margin-top:0px;line-height: 12px;">周·{{detail_title}}
             </mu-sub-header>
             <mu-list-item>
@@ -79,14 +79,24 @@
             }
         },
         props: {
-            course_detail:Object,
-            detail_title:String,
-            openDetail:Boolean
+            course_detail: Object,
+            detail_title: String,
+            openDetail: Boolean
         },
-        methods:{
-            doSomething:function () {
+        methods: {
+            doSomething: function () {
                 this.$emit('doSomething')
             }
+        },
+        computed: {
+            isShow: {
+                get: function () {
+                    return this.openDetail
+                },
+                set: function () {
+                }
+            }
+
         }
     }
 </script>
@@ -96,4 +106,5 @@
     .content-name {
         word-wrap: break-word;
     }
+
 </style>

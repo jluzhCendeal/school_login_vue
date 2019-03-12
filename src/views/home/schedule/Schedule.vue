@@ -21,7 +21,9 @@
             </mu-paper>
             <mu-paper :z-depth="1" style="margin-bottom:30px;position: relative;top: 46px">
                 <swiper style="margin: 0px" :options="swiperOption" ref="mySwiper">
-                    <swiper-slide v-for="i in total_week">
+
+                    <swiper-slide v-for="i in 3">
+                        <!--v-for="i in total_week">-->
                         <table class="table-center">
                             <tr v-for="r in table_rows_cols.cols.courses" class="table-course-head">
                                 <td class="table-first">
@@ -36,6 +38,7 @@
                             </tr>
                         </table>
                     </swiper-slide>
+
 
                 </swiper>
             </mu-paper>
@@ -60,7 +63,11 @@
 </template>
 
 <script>
+    //导入vue组件
     import ScheduleDetailDialog from '@/components/ScheduleDetailDialog'
+    // 导入js
+    import {getScheduleJs, loginjs, getCurrentWeek} from "../../../assets/util/jluzhRequest";
+    import {getScheduleExpiration, getCurrentWeekExpiration} from "../../../assets/util/jluzhStoreExpiration";
 
 
     export default {
@@ -99,21 +106,55 @@
                 total_week: 21,
                 current_date: new Date(),
                 swiperOption: {
+                    init: false,
+
                     on: {
                         transitionStart: () => {
-                            if (this.mySwiper.activeIndex != this.page.activate) {
-                                if (this.mySwiper.activeIndex - this.mySwiper.previousIndex > 0) {
-                                    this.nextPage()
 
-                                } else if (this.mySwiper.activeIndex - this.mySwiper.previousIndex < 0) {
-                                    this.prePage()
+
+                            if (this.mySwiper.activeIndex != this.page.activate) {
+                                if ((this.mySwiper.activeIndex != 3 || this.mySwiper.previousIndex != 0)
+                                    && this.mySwiper.activeIndex - this.mySwiper.previousIndex > 0
+                                    ) {
+                                    if (this.choose_week > this.total_week) {
+                                        this.mySwiper.allowSlideNext = false;
+                                    } else {
+                                        this.mySwiper.allowSlideNext = true;
+                                    }
+                                    if(this.mySwiper.isEnd){
+                                        this.mySwiper.slideNext(500,false)
+                                    }else{
+                                        this.nextPage()
+                                    }
+
+
+                                } else if ((this.mySwiper.activeIndex != 1 || this.mySwiper.previousIndex != 4)
+                                    && this.mySwiper.activeIndex - this.mySwiper.previousIndex < 0) {
+                                    if (this.choose_week < 1) {
+                                        this.mySwiper.allowSlidePrev = false
+                                    } else {
+                                        this.mySwiper.allowSlidePrev = true
+                                    }
+                                    if(this.mySwiper.isBeginning){
+                                        this.mySwiper.slidePrev()
+                                    }else{
+                                        this.prePage()
+                                    }
+
+
+
                                 }
                                 this.page.activate = this.mySwiper.activeIndex
                                 this.page.pre = this.mySwiper.previousIndex
                             }
+
                         }
+
                     },
-                    effect: 'cube'
+                    effect: 'cube',
+                    cubeEffect: {
+                        slideShadows: false,
+                    },
                 },
                 openDetail: false,
                 detail_title: 'default',
@@ -128,41 +169,48 @@
                 }
             };
         },
-        created() {
-            this.initCourse()
-            this.analysisCourse()
-            this.calculateDate()
-        },
-        //监听 同步数据
-        computed: {
-            mySwiper: function () {
-                return this.$refs.mySwiper.swiper
-            },
-            changeCurrentWeek:function () {
-                return this.$store.state.current_week
-            }
-        },
-        watch:{
-            changeCurrentWeek:function () {
-                this.choose_week = this.changeCurrentWeek
-                this.toThisWeek(0)
-            }
-        },
-
-        mounted() {
-            this.toThisWeek(0)
-        },
-
         methods: {
+            getScheduleExpiration: getScheduleExpiration,
+            getCurrentWeekExpiration: getCurrentWeekExpiration,
+            login: loginjs,
+            getSchedule: getScheduleJs,
+            getCurrentWeek: getCurrentWeek,
+
+            jsonpCallback: (json) => {
+            },
+            callbackSchedule: function (json) {
+                if (json.code == 0) {
+                    let list = json.data
+                    if (list != undefined) {
+                        this.$jluzhLocalStorage.setItem('jluzh_courses', JSON.stringify(list.list), this.getScheduleExpiration())
+                        this.$store.commit('updateCourses', this.$jluzhLocalStorage.getItem('jluzh_courses'))
+                        this.$toast.info({message: "更新成功,200！", position: 'top'})
+                        this.analysisCourse()
+                    } else {
+                        this.$toast.info({message: json.msg, position: 'top'})
+                    }
+
+                }
+            },
+            callbackCurrentWeek: function (json) {
+                this.$jluzhLocalStorage.setItem('jluzh_current_week', json.weeks, this.getCurrentWeekExpiration())
+                this.$store.commit('updateWeek', Number(json.weeks))
+            },
+
             nextPage: function () {
-                this.choose_week += 1
-                this.calculateDate(this.choose_week - 1)
-                this.analysisCourse()
+                if (this.choose_week < this.total_week) {
+                    this.choose_week += 1
+                    this.calculateDate(this.choose_week - 1)
+                    this.analysisCourse()
+                }
+
             },
             prePage: function () {
-                this.choose_week -= 1
-                this.calculateDate(this.choose_week - 1)
-                this.analysisCourse()
+                if (this.choose_week > 1) {
+                    this.choose_week -= 1
+                    this.calculateDate(this.choose_week - 1)
+                    this.analysisCourse()
+                }
             },
             calculateDate(next = 0) {
                 let index = this.current_date.getDay()
@@ -187,7 +235,6 @@
                 }
             },
             getCourseColor: function (name = null) {
-
                 if (name == null) {
                     return {backgroundColor: 'white'}
                 } else if (name == 'notset') {
@@ -213,8 +260,6 @@
                 }
 
             },
-
-
             toThisWeek: function (times = 500) {
                 this.mySwiper.slideTo(this.changeCurrentWeek - 1, times);
                 this.choose_week = this.changeCurrentWeek
@@ -222,7 +267,18 @@
                 this.analysisCourse()
 
             },
+            initCurrentWeek: function () {
+                let current = this.$jluzhLocalStorage.getItem('jluzh_current_week')
+                if (current == null) {
+                    this.getCurrentWeek().then(this.callbackCurrentWeek)
+                } else {
+                    this.$store.commit('updateWeek', Number(current))
+                }
+                this.choose_week = this.changeCurrentWeek
+
+            },
             initCourse: function () {
+                this.table_rows_cols.cols.courses = []
                 for (let i = 0; i < 12; i++) {
                     let courserObj = {
                         time: String(i + 1),
@@ -241,66 +297,139 @@
                     this.table_rows_cols.cols.courses.push(courserObj)
                 }
             },
-            analysisCourse: function () {
-                let list = JSON.parse(localStorage.getItem('jlu_courses'))
-                let temp = sessionStorage.getItem('courses_color_selection')
-                if (temp != null) {
-                    this.courses_color_selection = JSON.parse(temp)
-                }
-                for (let i in list) {
-                    let numbers = list[i].class_start_to_end.split('-')
-                    let weeks = list[i].weeks_start_to_end
-                    let is_now = false
-                    for (let index in weeks) {
-                        let week = weeks[index].replace('周', '').split('-')
-                        let min = Number(week[0])
-                        let max = min
-                        if (week.length == 2) {
-                            max = Number(week[1].replace(/[^0-9]/ig, ''))
-                        }
-
-                        if (this.choose_week >= min && this.choose_week <= max) {
-                            if (list[i].times_type[index] == 0) {
-                                is_now = true
-                            } else if (list[i].times_type[index] == 2 && this.choose_week % 2 == 0) {
-                                is_now = true
-                            } else if (list[i].times_type[index] == 1 && this.choose_week % 2 != 0) {
-                                is_now = true
-                            }
-                            break
-                        }
-                    }
-
-
-                    if (numbers.length == 2) {
-                        let rows = numbers[1] - numbers[0] + 1
-                        let time = Number(numbers[0]) - 1
-                        let course = this.table_rows_cols.cols.courses[time]
-                        course.rows = rows
-                        for (let i = time; i < numbers[1]; i++) {
-                            this.table_rows_cols.cols.courses[i].show = false
-                        }
-                        course.show = true
-                        let obj = course['list'][Number(list[i].day) - 1]
-                        if (obj.detail != null && (obj.detail.name != list[i].name && !is_now))
-                            continue
-
-                        obj.simple = list[i].name + '|' + list[i].place
-                        if (is_now) {
-                            obj.color = this.getCourseColor(list[i].name)
+            beforeAnalysis: function () {
+                let course = this.$jluzhLocalStorage.getItem('jluzh_courses')
+                if (course == null || course == undefined) {
+                    let is_login = sessionStorage.getItem('jluzh_is_login')
+                    let grade = this.$jluzhLocalStorage.getItem('schedule_grade')
+                    let term = this.$jluzhLocalStorage.getItem('schedule_term')
+                    this.initCourse()
+                    if (is_login != null || is_login != undefined) {
+                        this.getSchedule(grade, term)
+                            .then(this.callbackSchedule).then(
+                            this.initCurrentWeek()
+                        )
+                    } else {
+                        // 检测是否已经绑定
+                        let token = this.$jluzhLocalStorage.getItem('token')
+                        if (token != null) {
+                            this.login(token)
+                                .then(this.callbackLogin)
+                                .then(() => {
+                                    this.getSchedule(grade, term)
+                                        .then(this.callbackSchedule).then(
+                                        this.initCurrentWeek()
+                                    )
+                                })
                         } else {
-                            obj.color = this.getCourseColor('notset')
+                            this.$toast.info({message: '未绑定！', position: 'top'})
                         }
-                        obj.detail = list[i]
-                        obj.detail.weeks_start_to_end = String(obj.detail.weeks_start_to_end).replace('"', '')
-
 
                     }
+                } else {
+                    this.$store.commit('updateCourses', course)
+                    this.initCurrentWeek()
+                    this.analysisCourse()
                 }
-                sessionStorage.setItem('courses_color_selection', JSON.stringify(this.courses_color_selection))
+            },
+            analysisCourse: function () {
+                try {
+                    let list = JSON.parse(this.changeScheduleData)
+                    let temp = sessionStorage.getItem('courses_color_selection')
+                    if (temp != null) {
+                        this.courses_color_selection = JSON.parse(temp)
+                    }
+                    for (let i in list) {
+                        let numbers = list[i].class_start_to_end.split('-')
+                        let weeks = list[i].weeks_start_to_end
+                        let is_now = false
+                        for (let index in weeks) {
+                            let week = weeks[index].replace('周', '').split('-')
+                            let min = Number(week[0])
+                            let max = min
+                            if (week.length == 2) {
+                                max = Number(week[1].replace(/[^0-9]/ig, ''))
+                            }
+
+                            if (this.choose_week >= min && this.choose_week <= max) {
+                                if (list[i].times_type[index] == 0) {
+                                    is_now = true
+                                } else if (list[i].times_type[index] == 2 && this.choose_week % 2 == 0) {
+                                    is_now = true
+                                } else if (list[i].times_type[index] == 1 && this.choose_week % 2 != 0) {
+                                    is_now = true
+                                }
+                                break
+                            }
+                        }
+
+                        if (numbers.length == 2) {
+                            let rows = numbers[1] - numbers[0] + 1
+                            let time = Number(numbers[0]) - 1
+                            let course = this.table_rows_cols.cols.courses[time]
+                            course.rows = rows
+                            for (let i = time; i < numbers[1]; i++) {
+                                this.table_rows_cols.cols.courses[i].show = false
+                            }
+                            course.show = true
+                            let obj = course['list'][Number(list[i].day) - 1]
+                            if (obj.detail != null && (obj.detail.name != list[i].name && !is_now))
+                                continue
+
+                            obj.simple = list[i].name + '|' + list[i].place
+                            if (is_now) {
+                                obj.color = this.getCourseColor(list[i].name)
+                            } else {
+                                obj.color = this.getCourseColor('notset')
+                            }
+                            obj.detail = list[i]
+                            obj.detail.weeks_start_to_end = String(obj.detail.weeks_start_to_end).replace('"', '')
+
+                        }
+                    }
+                    sessionStorage.setItem('courses_color_selection', JSON.stringify(this.courses_color_selection))
+
+                } catch (err) {
+                    return
+                }
             }
-        }
+        },
+
+        //监听 同步数据
+        computed: {
+            mySwiper: function () {
+                return this.$refs.mySwiper.swiper
+            },
+            changeCurrentWeek: function () {
+                return this.$store.state.current_week
+            },
+            changeScheduleData: function () {
+                return this.$store.state.jluzh_courses
+            }
+        },
+        watch: {
+            changeCurrentWeek: function () {
+                this.choose_week = this.changeCurrentWeek
+                this.toThisWeek(0)
+            },
+            changeScheduleData: function () {
+                this.beforeAnalysis()
+            }
+        },
+        created() {
+
+            this.initCourse()
+            this.beforeAnalysis()
+            this.calculateDate()
+
+        },
+        mounted() {
+            this.mySwiper.params.loop = true
+            this.mySwiper.init()
+            this.toThisWeek(0)
+        },
     }
+
 </script>
 
 <style scoped>
