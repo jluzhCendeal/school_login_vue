@@ -27,7 +27,7 @@ Vue.use(NProgress)
 Vue.use(Toast)
 
 Vue.config.productionTip = false
-NProgress.config({color:'yellow'})
+// NProgress.config({color:'yellow'})
 new Vue({
   Toast,
   VueCookie,

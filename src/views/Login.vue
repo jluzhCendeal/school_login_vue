@@ -16,7 +16,7 @@
                     <mu-text-field v-model="validateForm.yhm" prop="yhm"></mu-text-field>
                 </mu-form-item>
                 <mu-form-item label="密码" prop="mm" :rules="passwordRules">
-                    <mu-text-field type="password" v-model="validateForm.mm" prop="mm" :action-icon="visibility ? 'visibility_off' : 'visibility'" :action-click="() => (visibility = !visibility)" :type="visibility ? 'text' : 'password'"></mu-text-field>
+                    <mu-text-field v-model="validateForm.mm" prop="mm" :action-icon="visibility ? 'visibility_off' : 'visibility'" :action-click="() => (visibility = !visibility)" :type="visibility ? 'text' : 'password'"></mu-text-field>
                 </mu-form-item>
                 <mu-form-item prop="isAgree" :rules="argeeRules">
                     <mu-checkbox label="同意使用该模拟登陆服务" v-model="validateForm.isAgree"></mu-checkbox>
@@ -69,7 +69,7 @@
                     mm: '',
                     isAgree: false
                 },
-                progress: false,
+               progress: false,
                 openAlert:false,
                 visibility:false
             }
