@@ -12,7 +12,7 @@
 
         <div class="score-show">
             <mu-dialog transition="slide-bottom" lock-scroll scrollable fullscreen :open.sync="openFullscreen">
-                <mu-appbar color="red500" v-bind:title="dialog_title">
+                <mu-appbar :color="navStyle.backgroundColor" :style="{color:navStyle.color}" v-bind:title="dialog_title">
                     <mu-button slot="right" flat @click="closeFullscreenDialog">
                         <mu-icon value="close"></mu-icon>
                     </mu-button>
@@ -65,7 +65,8 @@
                 list: [],
                 total: 0,
                 others: {},
-                progress: false
+                progress: false,
+                navStyle: this.$store.getters.navStyle
             }
 
         },
