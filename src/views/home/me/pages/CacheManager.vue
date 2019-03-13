@@ -99,7 +99,7 @@
             for (let i = 0; i < this.jluzhLocalStorageInfo.count; i++) {
                 this.color_chip_for_loc.push(this.randomColor())
             }
-            for (let i = 0; i < this.getSessionStorageInfo().count; i++) {
+            for (let i = 0; i < this.sessionStorageInfo.count; i++) {
                 this.color_chip_for_ses.push(this.randomColor())
             }
         }
