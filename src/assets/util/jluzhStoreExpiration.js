@@ -30,7 +30,7 @@ function getCurrentWeekExpiration() {
  * @param Number totalWeek-总周数
  * @return Number 生存时间-秒
  */
-function getScheduleExpiration(totalWeek=22) {
+function getScheduleExpiration(totalWeek=21) {
     let now = new Date()
     return calculateExpiration(now,totalWeek*7)
 }
