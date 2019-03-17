@@ -219,12 +219,16 @@
                 }
             },
             calculateDate(next = 0) {
-                let index = this.current_date.getDay()
+
+                let index = this.current_date.getDay()-1
+                if(index<0){
+                    index=6
+                }
                 let date_rows = this.table_rows_cols.rows.dates
 
                 for (let i in date_rows) {
 
-                    let day = i - index + 1
+                    let day = i - index
                     let now = new Date()
                     now.setDate(this.current_date.getDate() + day + next * 7 - (this.changeCurrentWeek - 1) * 7)
                     let month = now.getMonth() + 1
