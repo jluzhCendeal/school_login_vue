@@ -8,7 +8,8 @@ function calculateExpiration(now,day) {
     let future = new Date()
     future.setHours(0,0,0,0)
     future.setDate(now.getDate()+day)
-    return Math.floor(future - now)
+
+    return Math.floor((future - now)/1000)
 }
 
 /**
@@ -22,7 +23,7 @@ function getCurrentWeekExpiration() {
     if(day<0){
         day=6
     }
-    return calculateExpiration(now,6-day)
+    return calculateExpiration(now,7-day)
 }
 
 /**

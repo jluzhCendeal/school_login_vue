@@ -2,15 +2,19 @@ class JluzhLocalStorage {
 
     //获取值
     getItem(key) {
+
         let now = new Date()
         let data = JSON.parse(localStorage.getItem(key))
         if (data != null) {
             if (data.expiration != null) {
                 let expiration = new Date(data.expiration)
+
                 if (expiration - now <= 0) {
+
                     delete localStorage['key']
                     return undefined
                 }
+
             }
 
             return data.val

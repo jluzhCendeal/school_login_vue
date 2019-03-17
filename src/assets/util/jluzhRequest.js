@@ -12,6 +12,7 @@ function loginjs(token) {
         callbackName: 'jsonpCallback'
     })
 
+
 }
 
 

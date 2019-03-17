@@ -317,7 +317,7 @@
                     if (is_login != null || is_login != undefined) {
                         this.getSchedule(grade, term)
                             .then(this.callbackSchedule).then(
-                            this.initCurrentWeek()
+                            this.initCurrentWeek
                         )
                     } else {
                         // 检测是否已经绑定
@@ -328,7 +328,7 @@
                                 .then(() => {
                                     this.getSchedule(grade, term)
                                         .then(this.callbackSchedule).then(
-                                        this.initCurrentWeek()
+                                        this.initCurrentWeek
                                     )
                                 })
                         } else {
