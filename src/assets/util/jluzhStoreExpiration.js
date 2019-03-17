@@ -18,7 +18,11 @@ function calculateExpiration(now,day) {
  */
 function getCurrentWeekExpiration() {
     let now = new Date()
-    return calculateExpiration(now,8-now.getDay())
+    let day=now.getDay()-1
+    if(day<0){
+        day=6
+    }
+    return calculateExpiration(now,6-day)
 }
 
 /**
