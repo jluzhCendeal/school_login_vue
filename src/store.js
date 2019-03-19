@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         app_title: '吉机',
-        app_host: 'http://www.cendeal.cn:5001/jlu/api',
+        app_host: 'https://www.cendeal.cn:5001/jlu/api',
         theme: {
             nav_style: {
                 backgroundColor: 'rgb(244, 67, 54)',
