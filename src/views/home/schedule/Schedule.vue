@@ -2,7 +2,7 @@
     <div class="table-contain" style="position: relative">
         <!--课表主体-->
         <div class="table-main">
-            <mu-paper :z-depth="2" style="position:fixed;z-index:10;top: 54px">
+            <mu-paper :z-depth="2" style="position:fixed;z-index:100;top: 54px">
                 <table class="table-center">
                     <tr class="table-center">
                         <td class="table-first" rowspan="2">
@@ -19,8 +19,8 @@
                     </tr>
                 </table>
             </mu-paper>
-            <mu-paper :z-depth="2" style="margin-bottom:30px;position: relative;top: 46px">
-                <swiper style="margin: 0px" :options="swiperOption" ref="mySwiper">
+            <mu-paper :z-depth="2" style="margin-bottom:16vh;position: relative;top: 46px">
+                <swiper style="margin:0" :options="swiperOption" ref="mySwiper">
 
                     <swiper-slide v-for="i in 3">
                         <!--v-for="i in total_week">-->
@@ -103,8 +103,9 @@
 
                     }
                 },
-                total_week: 21,
+                total_week: this.$jluzhLocalStorage.getItem('jluzh_total_week') != null ? this.$jluzhLocalStorage.getItem('jluzh_total_week') : 20,
                 current_date: new Date(),
+                current_week: this.$jluzhLocalStorage.getItem('jluzh_current_week') != null ? this.$jluzhLocalStorage.getItem('jluzh_current_week') : 1,
                 swiperOption: {
                     init: false,
 
@@ -115,15 +116,15 @@
                             if (this.mySwiper.activeIndex != this.page.activate) {
                                 if ((this.mySwiper.activeIndex != 3 || this.mySwiper.previousIndex != 0)
                                     && this.mySwiper.activeIndex - this.mySwiper.previousIndex > 0
-                                    ) {
+                                ) {
                                     if (this.choose_week > this.total_week) {
                                         this.mySwiper.allowSlideNext = false;
                                     } else {
                                         this.mySwiper.allowSlideNext = true;
                                     }
-                                    if(this.mySwiper.isEnd){
-                                        this.mySwiper.slideNext(500,false)
-                                    }else{
+                                    if (this.mySwiper.isEnd) {
+                                        this.mySwiper.slideNext(500, false)
+                                    } else {
                                         this.nextPage()
                                     }
 
@@ -135,14 +136,11 @@
                                     } else {
                                         this.mySwiper.allowSlidePrev = true
                                     }
-                                    if(this.mySwiper.isBeginning){
+                                    if (this.mySwiper.isBeginning) {
                                         this.mySwiper.slidePrev()
-                                    }else{
+                                    } else {
                                         this.prePage()
                                     }
-
-
-
                                 }
                                 this.page.activate = this.mySwiper.activeIndex
                                 this.page.pre = this.mySwiper.previousIndex
@@ -175,9 +173,6 @@
             login: loginjs,
             getSchedule: getScheduleJs,
             getCurrentWeek: getCurrentWeek,
-
-            jsonpCallback: function(json) {
-            },
             callbackSchedule: function (json) {
                 if (json.code == 0) {
                     let list = json.data
@@ -194,6 +189,7 @@
             },
             callbackCurrentWeek: function (json) {
                 this.$jluzhLocalStorage.setItem('jluzh_current_week', json.weeks, this.getCurrentWeekExpiration())
+                this.$jluzhLocalStorage.setItem('jluzh_total_week', json.total_weeks, this.getScheduleExpiration())
                 this.$store.commit('updateWeek', Number(json.weeks))
             },
             callbackLogin: function (json) {
@@ -220,9 +216,9 @@
             },
             calculateDate(next = 0) {
 
-                let index = this.current_date.getDay()-1
-                if(index<0){
-                    index=6
+                let index = this.current_date.getDay() - 1
+                if (index < 0) {
+                    index = 6
                 }
                 let date_rows = this.table_rows_cols.rows.dates
 
@@ -280,7 +276,7 @@
             initCurrentWeek: function () {
                 let current = this.$jluzhLocalStorage.getItem('jluzh_current_week')
                 if (current == null) {
-                    this.getCurrentWeek().then(this.callbackCurrentWeek)
+                    this.getCurrentWeek('callbackCurrentWeek').then(this.callbackCurrentWeek)
                 } else {
                     this.$store.commit('updateWeek', Number(current))
                 }
@@ -315,22 +311,14 @@
                     let term = this.$jluzhLocalStorage.getItem('schedule_term')
                     this.initCourse()
                     if (is_login != null || is_login != undefined) {
-                        this.getSchedule(grade, term)
-                            .then(this.callbackSchedule).then(
-                            this.initCurrentWeek
-                        )
+                        this.getSchedule(grade, term, 'callbackSchedule')
+                            .then(this.callbackSchedule)
                     } else {
                         // 检测是否已经绑定
                         let token = this.$jluzhLocalStorage.getItem('token')
                         if (token != null) {
-                            this.login(token)
+                            this.login(token, 'callbackLogin')
                                 .then(this.callbackLogin)
-                                .then(() => {
-                                    this.getSchedule(grade, term)
-                                        .then(this.callbackSchedule).then(
-                                        this.initCurrentWeek
-                                    )
-                                })
                         } else {
                             this.$toast.info({message: '未绑定！', position: 'top'})
                         }
@@ -427,7 +415,6 @@
             }
         },
         created() {
-
             this.initCourse()
             this.beforeAnalysis()
             this.calculateDate()

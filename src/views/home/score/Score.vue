@@ -23,9 +23,7 @@
                             :total="total"
                             :list="list">
                     </score-table>
-
                     <score-total-board :others="others"></score-total-board>
-
                 </div>
             </mu-dialog>
         </div>
@@ -42,7 +40,7 @@
 
     // 导入js
     import {getSelection, getScore, loginjs} from "../../../assets/util/jluzhRequest";
-    import {getScheduleExpiration, getCurrentWeekExpiration} from "../../../assets/util/jluzhStoreExpiration";
+    import {getScheduleExpiration} from "../../../assets/util/jluzhStoreExpiration";
 
     export default {
         name: "Score",
@@ -72,13 +70,10 @@
         },
         methods: {
             getScheduleExpiration: getScheduleExpiration,
-            getCurrentWeekExpiration: getCurrentWeekExpiration,
             getSelection: getSelection,
             getScore: getScore,
             login: loginjs,
 
-            jsonpCallback: function (json) {
-            },
             setSelection: function (selection) {
                 this.grades = selection.Grades
                 this.terms = selection.terms
@@ -133,22 +128,21 @@
                 } else {
                     let is_login = sessionStorage.getItem('jluzh_is_login')
                     if (is_login != null || is_login != undefined) {
-                        this.getSelection()
+                        this.getSelection('callbackSelection')
                             .then(this.callbackSelection)
 
                     } else {
                         let token = this.$jluzhLocalStorage.getItem('token')
                         if (token != null) {
-                            this.login(token)
+                            this.login(token,'callbackLogin')
                                 .then(this.callbackLogin)
                                 .then(() => {
-                                    this.getSelection()
+                                    this.getSelection('callbackSelection')
                                         .then(this.callbackSelection)
                                 })
                         } else {
                             this.$toast.info({message: '未绑定！', position: 'top'})
                         }
-
                     }
                 }
             },
@@ -157,7 +151,7 @@
                 this.progress = true
                 let is_login = sessionStorage.getItem('jluzh_is_login')
                 if (is_login != null || is_login != undefined) {
-                    this.getScore(this.user.grade, this.user.term)
+                    this.getScore(this.user.grade, this.user.term,'callbackScore')
                         .then(this.callbackScore).catch(() =>{
                         this.progress = false
                         this.$toast.info({message: '查询失败!', position: 'top'})
@@ -167,10 +161,10 @@
                 } else {
                     let token = this.$jluzhLocalStorage.getItem('token')
                     if (token != null) {
-                        this.login(token)
+                        this.login(token,'callbackLogin')
                             .then(this.callbackLogin)
                             .then(() => {
-                                this.getScore(this.user.grade, this.user.term)
+                                this.getScore(this.user.grade, this.user.term,'callbackScore')
                                     .then(this.callbackScore).catch(() =>{
                                     this.progress = false
                                     this.$toast.info({message: '查询失败!', position: 'top'})
@@ -190,9 +184,6 @@
         },
         mounted() {
             this.getGrade()
-
-        },
-        created() {
 
         }
     }

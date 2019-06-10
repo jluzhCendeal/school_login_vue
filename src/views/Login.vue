@@ -80,7 +80,7 @@
                 this.$refs.form.validate().then((result) => {
 
                     if (result) {
-                        this.$jsonp(this.$store.state.app_host + this.$store.getters.urlPaths.u_login, {
+                        this.$jsonp(this.$store.getters.urlPaths.u_login, {
                             yhm: this.validateForm.yhm,
                             mm: this.validateForm.mm,
                             callbackName: 'jsonpCallback'
@@ -94,6 +94,7 @@
                                 localStorage.setItem('username',this.validateForm.yhm)
                                 this.progress = false
                                 this.$router.push('/jluzh/me')
+
 
                             } else {
                                 this.$toast.error({message:'绑定失败!',position:'top'})
@@ -122,7 +123,7 @@
                 localStorage.clear()
                 sessionStorage.clear()
                 if(flag){
-                    this.$jsonp(this.$store.state.app_host + this.$store.getters.urlPaths.u_logout,{
+                    this.$jsonp(this.$store.getters.urlPaths.u_logout,{
                         callbackName: 'jsonpCallback'
                     })
                 }

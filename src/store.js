@@ -3,10 +3,10 @@ import Vuex from "vuex"
 
 Vue.use(Vuex)
 // noinspection JSValidateTypes
+const host_name = 'https://www.cendeal.cn:5001/jlu/api'
 const store = new Vuex.Store({
     state: {
         app_title: '吉机',
-        app_host: 'https://www.cendeal.cn:5001/jlu/api',
         theme: {
             nav_style: {
                 backgroundColor: 'rgb(244, 67, 54)',
@@ -17,6 +17,7 @@ const store = new Vuex.Store({
 
             head_pic_style: {
                 backgroundColor: '#ffca28',
+
                 'position': 'relative',
                 'top': '8px'
             },
@@ -29,13 +30,14 @@ const store = new Vuex.Store({
             }
         },
         url_paths: {
-            u_login: '/login',
-            u_schedule: '/querySchedule',
-            u_score: '/queryScore',
-            u_week: '/getCurrentWeek',
-            u_lines: '/getStuTimeLines',
-            u_auth: '/auth',
-            u_logout: '/logout'
+            u_login: host_name+'/login',
+            u_schedule: host_name+'/querySchedule',
+            u_score: host_name+'/queryScore',
+            u_week: host_name+'/getCurrentWeek',
+            u_lines: host_name+'/getStuTimeLines',
+            u_auth: host_name+'/auth',
+            u_logout: host_name+'/logout',
+            u_head_pic:host_name+'/getPhoto'
         },
         jluzh_courses: '',
         current_week:1,
@@ -94,8 +96,13 @@ const store = new Vuex.Store({
             state.current_week = week
         },
         updateCourses:function (state,courses) {
-            if(courses==null)
-            delete localStorage['jluzh_courses']
+            if(courses==null){
+                delete localStorage['jluzh_courses']
+                delete localStorage['jluzh_current_week']
+                delete localStorage['jluzh_total_week']
+            }
+
+
             state.jluzh_courses = courses
         }
     },
