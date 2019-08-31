@@ -1,14 +1,20 @@
 <template>
     <div>
-        <mu-appbar :style="'position:fixed;top:0;width: 100%;height:56px;color:'+nav_style.color" :title="app_title"
-                   :color="bar_color">
+        <mu-appbar :style="'line-height: 1;width: 100%;height:56px;color:'+nav_style.color" :title="app_title" :color="bar_color">
             <mu-menu slot="right">
                 <mu-button flat @click="closeBottomSheet">菜单</mu-button>
             </mu-menu>
         </mu-appbar>
-        <router-view style="margin-top: 56px;padding: 0;margin-bottom:56px"></router-view>
 
-        <div class="nav_bottom">
+
+        <mu-list style="margin-top: 0px;padding: 0px">
+            <div ref="main" >
+                <router-view></router-view>
+            </div>
+        </mu-list>
+
+
+        <div ref="nav" class="nav_bottom">
             <mu-bottom-nav :color="nav_active_color" :style="nav_style" :value.sync="shift">
                 <mu-bottom-nav-item value="schedule" title="课表" to="/jluzh/schedule" icon="view_list" replace>
                 </mu-bottom-nav-item>
@@ -53,7 +59,7 @@
 <script>
     import Selection from '@/components/Selection'
     // 导入js
-    import {getSelection, loginjs} from "../../assets/util/jluzhRequest";
+    import {getSelection,loginjs} from "../../assets/util/jluzhRequest";
     import {getScheduleExpiration} from "../../assets/util/jluzhStoreExpiration";
 
     export default {
@@ -68,6 +74,7 @@
                 bar_color: this.$store.getters.barColor,
                 nav_active_color: this.$store.getters.theme.nav_active_color,
                 shift: '',
+                height: `${document.documentElement.clientHeight}`,
                 open: false,
                 selection_dialog: false,
                 selection_data: {
@@ -83,7 +90,11 @@
         methods: {
             jsonpCallback: json => {
             },
-            login: loginjs,
+            resize() {
+                this.height = `${document.documentElement.clientHeight}`
+                this.$refs.main.style.height = (this.height - 56*2) + 'px';
+            },
+            login:loginjs,
             getSelection: getSelection,
             getScheduleExpiration: getScheduleExpiration,
 
@@ -125,9 +136,9 @@
 
             //修改时间：2019/3/7
             nextDo() {
-                this.$jluzhLocalStorage.setItem('schedule_grade', this.user.grade + 1, this.getScheduleExpiration())
-                this.$jluzhLocalStorage.setItem('schedule_term', this.user.term + 1, this.getScheduleExpiration())
-                this.selection_dialog = false
+                this.$jluzhLocalStorage.setItem('schedule_grade', this.user.grade + 1,this.getScheduleExpiration())
+                this.$jluzhLocalStorage.setItem('schedule_term', this.user.term + 1,this.getScheduleExpiration())
+                this.selection_dialog=false
                 this.updateSchedule()
             },
 
@@ -139,18 +150,18 @@
                     this.user.term = this.selection_data.current.term - 1
                 } else {
                     let is_login = sessionStorage.getItem('jluzh_is_login')
-                    if (!is_login) {
+                    if (is_login != null || is_login != undefined) {
                         this.getSelection().then(this.callbackSelection)
                     } else {
                         let token = this.$jluzhLocalStorage.getItem('token')
                         if (token != null) {
-                            this.login(token, 'callbackLogin')
+                            this.login(token,'callbackLogin')
                                 .then(this.callbackLogin)
                                 .then(() => {
                                     this.getSelection().then(this.callbackSelection)
                                 })
-                        } else {
-                            this.selection_dialog = false
+                        }else{
+                            this.selection_dialog=false
                             this.$toast.info({message: '未绑定！', position: 'top'})
                         }
                     }
@@ -161,18 +172,8 @@
             this.$store.commit('initTheme')
         },
         mounted() {
-            let is_login = sessionStorage.getItem('jluzh_is_login')
-            if (!is_login) {
-                let token = this.$jluzhLocalStorage.getItem('token')
-                if (token) {
-                    this.login(token, 'callbackLogin')
-                        .then(this.callbackLogin)
-                } else {
-                    this.$toast.info({message: '未绑定！', position: 'top'})
-                }
-            }
 
-
+            this.resize()
             let shifts = this.$router.history.current.path
             let point_to = {
                 '/jluzh/schedule': 'schedule',
@@ -186,15 +187,11 @@
                 this.$router.push('/jluzh/schedule')
             }
             this.shift = current_state
-
         }
     }
 </script>
 <style scoped>
-    .nav_bottom {
-        position: fixed;
-        z-index: 9999;
-        bottom: 0;
-        width: 100%;
-    }
+.nav_bottom{
+    line-height: 1;
+}
 </style>

@@ -5,33 +5,34 @@ class JluzhLocalStorage {
 
         let now = new Date()
         let data = JSON.parse(localStorage.getItem(key))
+
         if (data != null) {
+
+
             if (data.expiration != null) {
                 let expiration = new Date(data.expiration)
                 if (expiration - now <= 0) {
-                    delete localStorage['key']
+                    delete localStorage[key]
                     return undefined
                 }
 
             }
 
             return data.val
-        } else {
-            return null
         }
-
-
+        return null
     }
 
     //默认无限时间
     setItem(key, val, expiration = null) {
         let time = null
         if (expiration != null) {
-            let now = new Date()
-            time = now.setSeconds(now.getSeconds() + expiration)
+            time = expiration
         }
         let data = {val: val, expiration: time}
         localStorage.setItem(key, JSON.stringify(data))
+
+
     }
 
     //清空

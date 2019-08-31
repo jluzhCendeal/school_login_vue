@@ -155,21 +155,6 @@
         </div>
 
     </div>
-    <!--
-
-
-                    theme_config{
-                    nav_bg:'',
-                    nav_text_color:'',
-                    nav_active_color:'',
-                    head_pic_bg:'',
-                    head_pic_text_color:'',
-                    float_btn_bg:'',
-                    float_btn_text_color:''
-                    }
-
-
-    -->
 </template>
 
 <script>
@@ -231,16 +216,6 @@
                     float_btn_bg: '',
                     float_btn_text_color: ''
                 },
-                //choose_bar_color: '',
-                // choose_names:{
-                //     nav_bg:'main',
-                //     nav_active_color:'',
-                //     nav_text_color:'white',
-                //     head_pic_bg:'',
-                //     head_pic_text_color:'',
-                //     float_btn_bg_name:'',
-                //     float_btn_text_color:''
-                // }
             }
         },
         methods: {

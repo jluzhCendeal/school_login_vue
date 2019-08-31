@@ -1,0 +1,17 @@
+{
+  "short_name": "吉机",
+  "name": "吉机课表",
+  "version": {
+    "name": "1.3",
+    "code": "10"
+  },
+  "icon": [
+    {
+      "src": "/jluzh/img/logo.jpg",
+      "type": "image/png",
+      "size": "48x48"
+    }
+  ],
+  "start_url": "schedule",
+  "display": "standalone"
+}

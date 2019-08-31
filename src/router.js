@@ -1,58 +1,49 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/home/Home'
-import Login from '@/views/Login'
-import Me from '@/views/home/me/Me'
-import Score from '@/views/home/score/Score'
-import Schedule from '@/views/home/schedule/Schedule'
-import About from '@/views/home/me/pages/About'
-import Theme from '@/views/home/me/pages/ThemeSetting'
-import Contact from '@/views/home/me/pages/Contact'
-import CacheManager from "@/views/home/me/pages/CacheManager";
 Vue.use(VueRouter)
 const router = new VueRouter({
     mode: 'history',
     routes: [
         {
             path: '/jluzh',
-            component: Home,
+            component: ()=>import('@/views/home/Home'),
             children: [
 
                 {
                     path: 'score',
-                    component: Score
+                    component: ()=>import('@/views/home/score/Score')
                 },
                 {
                     path: 'me',
-                    component: Me,
+                    component: ()=>import('@/views/home/me/Me'),
 
                 },
                 {
                     path: 'schedule',
-                    component: Schedule
+                    component: ()=>import('@/views/home/schedule/Schedule')
                 }
 
             ]
         },
         {
             path: '/jluzh/login',
-            component: Login
+            component: ()=>import('@/views/Login')
         },
         {
             path: '/jluzh/about',
-            component: About
+            component: ()=>import('@/views/home/me/pages/About')
         },
         {
             path:'/jluzh/theme',
-            component:Theme
+            component:()=>import('@/views/home/me/pages/ThemeSetting')
         },
         {
             path:'/jluzh/contact',
-            component:Contact
+            component:()=>import('@/views/home/me/pages/Contact')
         },
         {
             path:'/jluzh/cache',
-            component:CacheManager
+            component:()=>import("@/views/home/me/pages/CacheManager")
         }
 
     ]

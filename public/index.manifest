@@ -1,0 +1,11 @@
+CACHE MANIFEST
+VERSION v1.02
+# version 2019-08-30-2
+CACHE:
+/jluzh/js/*.js
+/jluzh/img/*
+/jluzh/fonts/*
+/jluzh/css/*.css
+/jluzh/index.html
+NETWORK:
+*

@@ -2,7 +2,7 @@
     <div class="table-contain" style="position: relative">
         <!--课表主体-->
         <div class="table-main">
-            <mu-paper :z-depth="2" style="position:fixed;z-index:100;top: 54px">
+            <mu-paper :z-depth="2" style="position:fixed;z-index:10;top: 54px">
                 <table class="table-center">
                     <tr class="table-center">
                         <td class="table-first" rowspan="2">
@@ -19,8 +19,8 @@
                     </tr>
                 </table>
             </mu-paper>
-            <mu-paper :z-depth="2" style="margin-bottom:16vh;position: relative;top: 46px">
-                <swiper style="margin:0" :options="swiperOption" ref="mySwiper">
+            <mu-paper :z-depth="2" style="margin-bottom:30px;position: relative;top: 46px">
+                <swiper style="margin: 0px" :options="swiperOption" ref="mySwiper">
 
                     <swiper-slide v-for="i in 3">
                         <!--v-for="i in total_week">-->
@@ -141,6 +141,8 @@
                                     } else {
                                         this.prePage()
                                     }
+
+
                                 }
                                 this.page.activate = this.mySwiper.activeIndex
                                 this.page.pre = this.mySwiper.previousIndex

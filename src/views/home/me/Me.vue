@@ -4,8 +4,8 @@
         <div class="head">
             <mu-paper class="head-area" :z-depth="1" :style="head_pic_style">
                 <mu-flex justify-content="center" align-items="center">
-                    <mu-avatar style="width: 16vh;height: 16vh;margin: 2px"  size="20%">
-                        <img  style="width: 16vh;height: 16vh" ref='head_pic' :src="head_pic">
+                    <mu-avatar style="width: 12vh;height: 12vh;margin: 2px"  size="20%">
+                        <img  ref='head_pic' :src="head_pic">
                     </mu-avatar>
                 </mu-flex>
                 <mu-flex justify-content="center" align-items="center" style="padding: 2px">
@@ -63,14 +63,11 @@
                 head_pic_style: this.$store.getters.headPicStyle,
                 head_text_style: this.$store.getters.headTextStyle,
                 username: localStorage.getItem('username'),
-                head_pic: "https://www.cendeal.cn:5001/jlu/api/getPhoto?"+localStorage.getItem('username')
+                head_pic: this.$jluzhLocalStorage.getItem('token')?"https://www.cendeal.cn:5001/jlu/api/getPhoto?token="+this.$jluzhLocalStorage.getItem('token'):headPic
             }
         },
         mounted() {
-            let is_login = sessionStorage.getItem('jluzh_is_login')
-            if (!is_login) {
-              this.head_pic=headPic
-            }
+
         }
     }
 </script>

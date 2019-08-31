@@ -6,10 +6,9 @@
  */
 function calculateExpiration(now,day) {
     let future = new Date()
-    future.setHours(0,0,0,0)
+    future.setHours(23,59,59,0)
     future.setDate(now.getDate()+day)
-
-    return Math.floor((future - now)/1000)
+    return future
 }
 
 /**
@@ -19,7 +18,7 @@ function calculateExpiration(now,day) {
  */
 function getCurrentWeekExpiration() {
     let now = new Date()
-    let day=now.getDay()-1
+    let day=now.getDay()
     if(day<0){
         day=6
     }
