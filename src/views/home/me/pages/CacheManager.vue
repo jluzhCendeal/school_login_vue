@@ -23,7 +23,7 @@
                 <mu-list-item-content>
                     <mu-paper :z-depth="1">
 
-                        <mu-chip class="item-chip" v-for="info, index in  jluzhLocalStorageInfo.keys" :key="info"
+                        <mu-chip class="item-chip" v-for="(info, index) in  jluzhLocalStorageInfo.keys" :key="info"
                                  :color="color_chip_for_loc[index]" @delete="removeLocKey(index)" delete>{{info}}
                         </mu-chip>
                     </mu-paper>
@@ -40,15 +40,12 @@
                 </mu-list-item>
                 <mu-list-item-content>
                     <mu-paper :z-depth="1">
-                        <mu-chip class="item-chip" v-for="info, index in  sessionStorageInfo.keys" :key="info"
+                        <mu-chip class="item-chip" v-for="(info, index) in  sessionStorageInfo.keys" :key="info"
                                  :color="color_chip_for_ses[index]" @delete="removeSessionKey(index)" delete>{{info}}
                         </mu-chip>
                     </mu-paper>
                 </mu-list-item-content>
-
             </mu-list>
-
-
         </div>
     </div>
 

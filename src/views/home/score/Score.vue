@@ -81,14 +81,14 @@
                 this.user.term = selection.current.term
             },
             callbackLogin: function (json) {
-                if (json.code == 0) {
+                if (json.code === 0) {
                     sessionStorage.setItem('jluzh_is_login', true)
                 }
 
             },
             callbackScore: function (json) {
                 this.progress = false
-                if (json.code == 0) {
+                if (json.code === 0) {
                     this.list = json.data.list
                     this.others = json.data.others
                     this.total = json.data.total
@@ -99,7 +99,7 @@
                 }
             },
             callbackSelection: function (json) {
-                if (json.code == 0) {
+                if (json.code === 0) {
                     this.$jluzhLocalStorage.setItem(
                         'score_selection',
                         JSON.stringify(json.data),
@@ -130,7 +130,6 @@
                     if (is_login != null || is_login != undefined) {
                         this.getSelection('callbackSelection')
                             .then(this.callbackSelection)
-
                     } else {
                         let token = this.$jluzhLocalStorage.getItem('token')
                         if (token != null) {
@@ -150,7 +149,7 @@
             openFullscreenDialog() {
                 this.progress = true
                 let is_login = sessionStorage.getItem('jluzh_is_login')
-                if (is_login != null || is_login != undefined) {
+                if (is_login) {
                     this.getScore(this.user.grade, this.user.term,'callbackScore')
                         .then(this.callbackScore).catch(() =>{
                         this.progress = false
@@ -184,7 +183,6 @@
         },
         mounted() {
             this.getGrade()
-
         }
     }
 </script>

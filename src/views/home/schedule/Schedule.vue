@@ -23,14 +23,13 @@
                 <swiper style="margin: 0px" :options="swiperOption" ref="mySwiper">
 
                     <swiper-slide v-for="i in 3">
-                        <!--v-for="i in total_week">-->
                         <table class="table-center">
                             <tr v-for="r in table_rows_cols.cols.courses" class="table-course-head">
                                 <td class="table-first">
                                     {{r.time}}
                                 </td>
                                 <td v-for="(c,index) in r.list" class="course-row" :style="c.color"
-                                    v-show="r.show != false"
+                                    v-show="r.show"
                                     :rowspan="r.rows"
                                     @click="detail(c.detail,index)">
                                     <span v-show="c.day == index+1">{{c.simple}}</span>
@@ -46,7 +45,7 @@
         </div>
 
         <!--今天按钮-->
-        <mu-button fab small v-show="choose_week!=changeCurrentWeek" :color="float_btn_style.bg"
+        <mu-button fab small v-show="choose_week!==changeCurrentWeek" :color="float_btn_style.bg"
                    style="position: fixed;bottom: 62px;right:8px;z-index:999" @click="toThisWeek(500)">
             <mu-icon value="今" :color="float_btn_style.text"></mu-icon>
         </mu-button>
@@ -111,10 +110,8 @@
 
                     on: {
                         transitionStart: () => {
-
-
-                            if (this.mySwiper.activeIndex != this.page.activate) {
-                                if ((this.mySwiper.activeIndex != 3 || this.mySwiper.previousIndex != 0)
+                            if (this.mySwiper.activeIndex !== this.page.activate) {
+                                if ((this.mySwiper.activeIndex !== 3 || this.mySwiper.previousIndex !== 0)
                                     && this.mySwiper.activeIndex - this.mySwiper.previousIndex > 0
                                 ) {
                                     if (this.choose_week > this.total_week) {
@@ -127,9 +124,7 @@
                                     } else {
                                         this.nextPage()
                                     }
-
-
-                                } else if ((this.mySwiper.activeIndex != 1 || this.mySwiper.previousIndex != 4)
+                                } else if ((this.mySwiper.activeIndex !== 1 || this.mySwiper.previousIndex !== 4)
                                     && this.mySwiper.activeIndex - this.mySwiper.previousIndex < 0) {
                                     if (this.choose_week < 1) {
                                         this.mySwiper.allowSlidePrev = false
@@ -176,9 +171,9 @@
             getSchedule: getScheduleJs,
             getCurrentWeek: getCurrentWeek,
             callbackSchedule: function (json) {
-                if (json.code == 0) {
+                if (json.code === 0) {
                     let list = json.data
-                    if (list != undefined) {
+                    if (list) {
                         this.$jluzhLocalStorage.setItem('jluzh_courses', JSON.stringify(list.list), this.getScheduleExpiration())
                         this.$store.commit('updateCourses', this.$jluzhLocalStorage.getItem('jluzh_courses'))
                         this.$toast.info({message: "更新成功,200！", position: 'top'})
@@ -195,7 +190,7 @@
                 this.$store.commit('updateWeek', Number(json.weeks))
             },
             callbackLogin: function (json) {
-                if (json.code == 0) {
+                if (json.code === 0) {
                     sessionStorage.setItem('jluzh_is_login', true)
                 }
 
@@ -232,7 +227,7 @@
                     let month = now.getMonth() + 1
                     let date = now.getDate()
 
-                    if (this.current_date.getMonth() + 1 == month && this.current_date.getDate() == date) {
+                    if (this.current_date.getMonth() + 1 === month && this.current_date.getDate() === date) {
                         date_rows[i].color_style = {backgroundColor: 'pink'}
 
                     } else {
@@ -245,7 +240,7 @@
             getCourseColor: function (name = null) {
                 if (name == null) {
                     return {backgroundColor: 'white'}
-                } else if (name == 'notset') {
+                } else if (name === 'notset') {
                     this.courses_color_selection[name] = 'lightgrey'
 
                 } else if (!this.courses_color_selection.hasOwnProperty(name)) {
@@ -307,12 +302,12 @@
             },
             beforeAnalysis: function () {
                 let course = this.$jluzhLocalStorage.getItem('jluzh_courses')
-                if (course == null || course == undefined) {
+                if (!course) {
                     let is_login = sessionStorage.getItem('jluzh_is_login')
                     let grade = this.$jluzhLocalStorage.getItem('schedule_grade')
                     let term = this.$jluzhLocalStorage.getItem('schedule_term')
                     this.initCourse()
-                    if (is_login != null || is_login != undefined) {
+                    if (is_login) {
                         this.getSchedule(grade, term, 'callbackSchedule')
                             .then(this.callbackSchedule)
                     } else {
@@ -347,23 +342,23 @@
                             let week = weeks[index].replace('周', '').split('-')
                             let min = Number(week[0])
                             let max = min
-                            if (week.length == 2) {
+                            if (week.length === 2) {
                                 max = Number(week[1].replace(/[^0-9]/ig, ''))
                             }
 
                             if (this.choose_week >= min && this.choose_week <= max) {
-                                if (list[i].times_type[index] == 0) {
+                                if (list[i].times_type[index] === 0) {
                                     is_now = true
-                                } else if (list[i].times_type[index] == 2 && this.choose_week % 2 == 0) {
+                                } else if (list[i].times_type[index] === 2 && this.choose_week % 2 === 0) {
                                     is_now = true
-                                } else if (list[i].times_type[index] == 1 && this.choose_week % 2 != 0) {
+                                } else if (list[i].times_type[index] === 1 && this.choose_week % 2 !== 0) {
                                     is_now = true
                                 }
                                 break
                             }
                         }
 
-                        if (numbers.length == 2) {
+                        if (numbers.length === 2) {
                             let rows = numbers[1] - numbers[0] + 1
                             let time = Number(numbers[0]) - 1
                             let course = this.table_rows_cols.cols.courses[time]
@@ -373,7 +368,7 @@
                             }
                             course.show = true
                             let obj = course['list'][Number(list[i].day) - 1]
-                            if (obj.detail != null && (obj.detail.name != list[i].name && !is_now))
+                            if (obj.detail != null && (obj.detail.name !== list[i].name && !is_now))
                                 continue
 
                             obj.simple = list[i].name + '|' + list[i].place
@@ -390,7 +385,7 @@
                     sessionStorage.setItem('courses_color_selection', JSON.stringify(this.courses_color_selection))
 
                 } catch (err) {
-                    return
+                    return err
                 }
             }
         },
@@ -457,6 +452,4 @@
         word-wrap: break-word;
         border-radius: 5px;
     }
-
-
 </style>

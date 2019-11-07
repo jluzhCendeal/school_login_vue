@@ -1,13 +1,13 @@
 <template>
     <div class="login-view">
         <div>
-            <mu-appbar :style="'width: 100%;color:'+nav_style.color" :title="app_title" :color="nav_style.backgroundColor">
+            <mu-appbar :style="'width: 100%;color:'+nav_style.color" :title="app_title"
+                       :color="nav_style.backgroundColor">
                 <mu-button icon slot="left" to="/jluzh/me">
                     <mu-icon value="navigate_before"></mu-icon>
                 </mu-button>
             </mu-appbar>
         </div>
-
         <mu-paper :z-depth="1" style="margin-top: 8px">
             <mu-form ref="form" :model="validateForm" style="padding: 15px">
                 <p>吉林大学珠海学院教务系统-模拟登陆</p>
@@ -16,7 +16,10 @@
                     <mu-text-field v-model="validateForm.yhm" prop="yhm"></mu-text-field>
                 </mu-form-item>
                 <mu-form-item label="密码" prop="mm" :rules="passwordRules">
-                    <mu-text-field v-model="validateForm.mm" prop="mm" :action-icon="visibility ? 'visibility_off' : 'visibility'" :action-click="() => (visibility = !visibility)" :type="visibility ? 'text' : 'password'"></mu-text-field>
+                    <mu-text-field v-model="validateForm.mm" prop="mm"
+                                   :action-icon="visibility ? 'visibility_off' : 'visibility'"
+                                   :action-click="() => (visibility = !visibility)"
+                                   :type="visibility ? 'text' : 'password'"></mu-text-field>
                 </mu-form-item>
                 <mu-form-item prop="isAgree" :rules="argeeRules">
                     <mu-checkbox label="同意使用该模拟登陆服务" v-model="validateForm.isAgree"></mu-checkbox>
@@ -32,7 +35,8 @@
         </mu-paper>
         <mu-flex justify-content="center" align-items="center" style="font-size: smaller;margin: 10px">
             <mu-button color="red" flat @click="openAlertDialog">已绑定？解除绑定</mu-button>
-            <mu-dialog title="删除绑定" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="openAlert">
+            <mu-dialog title="删除绑定" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false"
+                       :open.sync="openAlert">
                 删除绑定，应用的主题将会重置；缓存在本地的数据也会清空，继续吗？
                 <mu-button slot="actions" flat color="primary" @click="closeAlertDialog(false)">否</mu-button>
                 <mu-button slot="actions" flat color="primary" @click="closeAlertDialog(true)">是</mu-button>
@@ -48,7 +52,7 @@
 
     export default {
         name: "Login",
-        components: {'over-lay':Overlay},
+        components: {'over-lay': Overlay},
 
         data() {
             return {
@@ -69,47 +73,41 @@
                     mm: '',
                     isAgree: false
                 },
-               progress: false,
-                openAlert:false,
-                visibility:false
+                progress: false,
+                openAlert: false,
+                visibility: false
             }
         },
         methods: {
-            jsonpCallback:json =>{},
-            submit() {
-                this.$refs.form.validate().then((result) => {
-
-                    if (result) {
-                        this.$jsonp(this.$store.getters.urlPaths.u_login, {
+            async submit() {
+                const result = await this.$refs.form.validate()
+                if (result) {
+                    try {
+                        this.progress = true
+                        const json = await this.$jsonp(this.$store.getters.urlPaths.u_login, {
                             yhm: this.validateForm.yhm,
                             mm: this.validateForm.mm,
                             callbackName: 'jsonpCallback'
-                        },).then(json => {
-                            if (json.code == '0') {
-                                this.clean(false)
-                                this.$toast.success({message:'已绑定!',position:'top'})
-                                this.$jluzhLocalStorage.setItem('token',json.data.token)
-                                sessionStorage.setItem('jluzh_is_login',true)
-
-                                localStorage.setItem('username',this.validateForm.yhm)
-                                this.progress = false
-                                this.$router.push('/jluzh/me')
-
-
-                            } else {
-                                this.$toast.error({message:'绑定失败!',position:'top'})
-                                this.progress = false
-                            }
-                        }).catch(()=> {
-                            this.$toast.error({message:'绑定失败!',position:'top'})
-                            this.progress = false
                         })
-                        this.progress = true
-                    } else {
-                        this.$toast.warning({message:'信息未完整!',position:'top'})
+                        if (json.code === 0) {
+                            this.clean(false)
+                            this.$toast.success({message: '已绑定!', position: 'top'})
+                            this.$jluzhLocalStorage.setItem('token', json.data.token)
+                            sessionStorage.setItem('jluzh_is_login', true)
+                            localStorage.setItem('username', this.validateForm.yhm)
+                            this.progress = false
+                            this.$router.push('/jluzh/me')
+                        } else {
+                            this.$toast.error({message: '绑定失败!', position: 'top'})
+                            this.progress = false
+                        }
+                    } catch (e) {
+                        this.$toast.error({message: '绑定失败!', position: 'top'})
+                        this.progress = false
                     }
-
-                });
+                } else {
+                    this.$toast.warning({message: '信息未完整!', position: 'top'})
+                }
             },
             reset() {
                 this.$refs.form.clear();
@@ -119,23 +117,19 @@
                     isAgree: false
                 };
             },
-            clean(flag=true){
+            clean(flag = true) {
                 localStorage.clear()
                 sessionStorage.clear()
-                if(flag){
-                    this.$jsonp(this.$store.getters.urlPaths.u_logout,{
-                        callbackName: 'jsonpCallback'
-                    })
+                if (flag) {
+                    this.$jsonp(this.$store.getters.urlPaths.u_logout, {callbackName: 'jsonpCallback'})
                 }
-
             },
-
-            openAlertDialog:function () {
-                this.openAlert=true
+            openAlertDialog: function () {
+                this.openAlert = true
             },
-            closeAlertDialog:function (flag) {
+            closeAlertDialog: function (flag) {
                 this.openAlert = false
-                if(flag){
+                if (flag) {
                     this.clean()
                 }
             }

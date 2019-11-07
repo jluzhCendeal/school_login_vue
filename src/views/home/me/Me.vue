@@ -1,6 +1,5 @@
 <template>
     <div class="me">
-
         <div class="head">
             <mu-paper class="head-area" :z-depth="1" :style="head_pic_style">
                 <mu-flex justify-content="center" align-items="center">

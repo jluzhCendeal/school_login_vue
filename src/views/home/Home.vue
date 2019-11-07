@@ -1,16 +1,14 @@
 <template>
     <div>
-        <mu-appbar :style="'line-height: 1;width: 100%;height:56px;color:'+nav_style.color" :title="app_title" :color="bar_color">
+        <mu-appbar class="app-bar" :style="{color:nav_style.color}" :title="app_title" :color="bar_color">
             <mu-menu slot="right">
                 <mu-button flat @click="closeBottomSheet">菜单</mu-button>
             </mu-menu>
         </mu-appbar>
 
 
-        <mu-list style="margin-top: 0px;padding: 0px">
-            <div ref="main" >
+        <mu-list class="main">
                 <router-view></router-view>
-            </div>
         </mu-list>
 
 
@@ -74,7 +72,6 @@
                 bar_color: this.$store.getters.barColor,
                 nav_active_color: this.$store.getters.theme.nav_active_color,
                 shift: '',
-                height: `${document.documentElement.clientHeight}`,
                 open: false,
                 selection_dialog: false,
                 selection_data: {
@@ -87,25 +84,24 @@
                 }
             }
         },
+        computed: {
+            height() {
+                return `${document.documentElement.clientHeight}`
+            }
+        },
         methods: {
-            jsonpCallback: json => {
-            },
-            resize() {
-                this.height = `${document.documentElement.clientHeight}`
-                this.$refs.main.style.height = (this.height - 56*2) + 'px';
-            },
             login:loginjs,
             getSelection: getSelection,
             getScheduleExpiration: getScheduleExpiration,
 
             callbackSelection: function (json) {
-                if (json.code == 0) {
+                if (json.code === 0) {
                     this.$jluzhLocalStorage.setItem('score_selection', JSON.stringify(json.data), this.getScheduleExpiration())
                     this.selection_data = json.data
                 }
             },
             callbackLogin: function (json) {
-                if (json.code == 0) {
+                if (json.code === 0) {
                     sessionStorage.setItem('jluzh_is_login', true)
                 }
 
@@ -144,13 +140,13 @@
 
             initSelection() {
                 let temp = this.$jluzhLocalStorage.getItem('score_selection')
-                if (temp != null || temp != undefined) {
+                if (temp) {
                     this.selection_data = JSON.parse(temp)
                     this.user.grade = this.selection_data.current.Grade - 1
                     this.user.term = this.selection_data.current.term - 1
                 } else {
                     let is_login = sessionStorage.getItem('jluzh_is_login')
-                    if (is_login != null || is_login != undefined) {
+                    if (is_login) {
                         this.getSelection().then(this.callbackSelection)
                     } else {
                         let token = this.$jluzhLocalStorage.getItem('token')
@@ -172,8 +168,6 @@
             this.$store.commit('initTheme')
         },
         mounted() {
-
-            this.resize()
             let shifts = this.$router.history.current.path
             let point_to = {
                 '/jluzh/schedule': 'schedule',
@@ -182,7 +176,7 @@
             }
 
             let current_state = point_to[shifts]
-            if (current_state == undefined) {
+            if (current_state === undefined) {
                 current_state = 'schedule'
                 this.$router.push('/jluzh/schedule')
             }
@@ -191,7 +185,24 @@
     }
 </script>
 <style scoped>
-.nav_bottom{
-    line-height: 1;
-}
+    .app-bar {
+        line-height: 1;
+        width: 100%;
+        height: 56px;
+        position: fixed;
+        top: 0;
+    }
+
+    .main {
+        margin-top: 56px;
+        margin-bottom: 56px;
+    }
+
+    .nav_bottom {
+        line-height: 1;
+        position: fixed;
+        bottom: 0;
+        width: 100vw;
+        z-index: 11;
+    }
 </style>
