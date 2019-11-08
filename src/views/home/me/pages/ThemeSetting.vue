@@ -57,7 +57,7 @@
                 </mu-sub-header>
                 <mu-paper class="theme-paper" :z-depth="1">
                     <mu-row gutter>
-                        <mu-col v-for="v in themes.nav_active_colors " span="4">
+                        <mu-col v-for="(v,index) in themes.nav_active_colors " :key="index" span="4">
                             <mu-flex align-items="center">
                                 <mu-radio v-model="theme_config.nav_active_color" :value="v"></mu-radio>
                                 <span :style="'width: 100%;height: 22px;background-color:'+v"></span>
@@ -93,7 +93,7 @@
                 </mu-sub-header>
                 <mu-paper class="theme-paper" :z-depth="1">
                     <mu-row gutter>
-                        <mu-col v-for="v in themes.head_pic_bg_colors " span="4">
+                        <mu-col v-for="(v,index) in themes.head_pic_bg_colors " :key="index" span="4">
                             <mu-flex align-items="center">
                                 <mu-radio v-model="theme_config.head_pic_bg" :value="v"></mu-radio>
                                 <span :style="'width: 100%;height: 22px;background-color:'+v"></span>
@@ -125,7 +125,7 @@
                     背景色
                     <mu-row gutter>
 
-                        <mu-col v-for="v in themes.float_btn_bg_colors" span="4">
+                        <mu-col v-for="(v,index) in themes.float_btn_bg_colors" :key="index" span="4">
                             <mu-flex align-items="center">
                                 <mu-radio v-model="theme_config.float_btn_bg" :value="v"></mu-radio>
                                 <span :style="'width: 100%;height: 22px;background-color:'+v"></span>
@@ -136,7 +136,7 @@
                     字体色
                     <mu-row gutter>
 
-                        <mu-col v-for="v in themes.float_btn_text_colors " span="4">
+                        <mu-col v-for="(v,index) in themes.float_btn_text_colors " :key="index" span="4">
                             <mu-flex align-items="center">
                                 <mu-radio v-model="theme_config.float_btn_text_color" :value="v"></mu-radio>
                                 <span :style="'width: 100%;height: 22px;background-color:'+v"></span>
@@ -244,7 +244,6 @@
         watch: {
             theme_config: {
                 handler() {
-                    console.log(this.theme_config.nav_active_color)
                     this.changeTheme()
 
                 },
