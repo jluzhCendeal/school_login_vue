@@ -39,7 +39,7 @@
         name: "About",
         data: function () {
             return {
-                app_title: this.$store.state.app_title + '-关于',
+                app_title: this.$store.state.theme.app_title + '-关于',
                 navStyle: this.$store.getters.navStyle
             }
         }

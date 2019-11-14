@@ -8,7 +8,7 @@
     export default {
         name: 'app',
         created() {
-            this.$store.commit('initTheme')
+            this.$store.dispatch('theme/initTheme')
         }
     }
 

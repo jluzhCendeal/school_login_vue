@@ -1,3 +1,6 @@
 module.exports ={
-    publicPath:'/jluzh'
+    publicPath: '/jluzh',
+    chainWebpack: () => {
+        console.log(process.env.API);
+    }
 }

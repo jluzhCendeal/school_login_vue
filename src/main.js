@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueJsonp from 'vue-jsonp'
 import router from './router'
-import store from  './store'
+import store from './store/index'
 
 import '@/assets/material-icons.css'
 import VueCookie from 'vue-cookie'

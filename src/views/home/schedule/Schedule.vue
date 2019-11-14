@@ -8,27 +8,27 @@
                         <td class="table-first" rowspan="2">
                             {{choose_week}}周
                         </td>
-                        <td v-for="w in table_rows_cols.rows.weekdays">
+                        <td v-for="(w,index) in table_rows_cols.rows.weekdays" :key="index">
                             {{w}}
                         </td>
                     </tr>
                     <tr class="table-center table-date">
-                        <td v-for="d in table_rows_cols.rows.dates" :style="d.color_style">
+                        <td v-for="(d,index) in table_rows_cols.rows.dates" :key="index" :style="d.color_style">
                             {{d.date}}
                         </td>
                     </tr>
                 </table>
             </mu-paper>
             <mu-paper :z-depth="2" style="margin-bottom:30px;position: relative;top: 46px">
-                <swiper style="margin: 0px" :options="swiperOption" ref="mySwiper">
-
-                    <swiper-slide v-for="i in 3">
+                <swiper style="margin: 0" :options="swiperOption" ref="mySwiper">
+                    <swiper-slide v-for="i in 3" :key="i">
                         <table class="table-center">
-                            <tr v-for="r in table_rows_cols.cols.courses" class="table-course-head">
+                            <tr v-for="(r,index) in table_rows_cols.cols.courses" :key="index"
+                                class="table-course-head">
                                 <td class="table-first">
                                     {{r.time}}
                                 </td>
-                                <td v-for="(c,index) in r.list" class="course-row" :style="c.color"
+                                <td v-for="(c,index) in r.list" :key="index" class="course-row" :style="c.color"
                                     v-show="r.show"
                                     :rowspan="r.rows"
                                     @click="detail(c.detail,index)">
@@ -37,11 +37,8 @@
                             </tr>
                         </table>
                     </swiper-slide>
-
-
                 </swiper>
             </mu-paper>
-
         </div>
 
         <!--今天按钮-->
@@ -114,11 +111,7 @@
                                 if ((this.mySwiper.activeIndex !== 3 || this.mySwiper.previousIndex !== 0)
                                     && this.mySwiper.activeIndex - this.mySwiper.previousIndex > 0
                                 ) {
-                                    if (this.choose_week > this.total_week) {
-                                        this.mySwiper.allowSlideNext = false;
-                                    } else {
-                                        this.mySwiper.allowSlideNext = true;
-                                    }
+                                    this.mySwiper.allowSlideNext = this.choose_week <= this.total_week;
                                     if (this.mySwiper.isEnd) {
                                         this.mySwiper.slideNext(500, false)
                                     } else {
@@ -126,11 +119,7 @@
                                     }
                                 } else if ((this.mySwiper.activeIndex !== 1 || this.mySwiper.previousIndex !== 4)
                                     && this.mySwiper.activeIndex - this.mySwiper.previousIndex < 0) {
-                                    if (this.choose_week < 1) {
-                                        this.mySwiper.allowSlidePrev = false
-                                    } else {
-                                        this.mySwiper.allowSlidePrev = true
-                                    }
+                                    this.mySwiper.allowSlidePrev = this.choose_week >= 1;
                                     if (this.mySwiper.isBeginning) {
                                         this.mySwiper.slidePrev()
                                     } else {
@@ -261,7 +250,6 @@
                     this.detail_title = this.table_rows_cols.rows.weekdays[index]
                     this.course_detail = obj
                 }
-
             },
             toThisWeek: function (times = 500) {
                 this.mySwiper.slideTo(this.changeCurrentWeek - 1, times);
@@ -270,10 +258,10 @@
                 this.analysisCourse()
 
             },
-            initCurrentWeek: function () {
+            initCurrentWeek: async function () {
                 let current = this.$jluzhLocalStorage.getItem('jluzh_current_week')
                 if (current == null) {
-                    this.getCurrentWeek('callbackCurrentWeek').then(this.callbackCurrentWeek)
+                    await this.getCurrentWeek('callbackCurrentWeek').then(this.callbackCurrentWeek)
                 } else {
                     this.$store.commit('updateWeek', Number(current))
                 }
@@ -319,7 +307,6 @@
                         } else {
                             this.$toast.info({message: '未绑定！', position: 'top'})
                         }
-
                     }
                 } else {
                     this.$store.commit('updateCourses', course)
@@ -345,7 +332,6 @@
                             if (week.length === 2) {
                                 max = Number(week[1].replace(/[^0-9]/ig, ''))
                             }
-
                             if (this.choose_week >= min && this.choose_week <= max) {
                                 if (list[i].times_type[index] === 0) {
                                     is_now = true
@@ -396,10 +382,10 @@
                 return this.$refs.mySwiper.swiper
             },
             changeCurrentWeek: function () {
-                return this.$store.state.current_week
+                return this.$store.state.theme.current_week
             },
             changeScheduleData: function () {
-                return this.$store.state.jluzh_courses
+                return this.$store.state.theme.jluzh_courses
             }
         },
         watch: {
@@ -431,18 +417,14 @@
         text-align: left;
         width: 1%;
     }
-
     .table-center {
         width: 100vw;
         text-align: center;
-
-
     }
 
     .table-date {
         font-size: x-small;
     }
-
     .course-row {
         background-color: lightgrey;
         color: white;

@@ -23,8 +23,6 @@
                     如果还是不行，稍后再试吧。
                 </mu-card-text>
             </mu-list>
-
-
         </div>
     </div>
 
@@ -35,7 +33,7 @@
         name: "Contact",
         data: function () {
             return {
-                app_title: this.$store.state.app_title + '-反馈',
+                app_title: this.$store.state.theme.app_title + '-反馈',
                 navStyle: this.$store.getters.navStyle
             }
         },

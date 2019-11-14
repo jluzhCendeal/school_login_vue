@@ -11,15 +11,15 @@
         <mu-paper :z-depth="1" style="margin-top: 8px">
             <mu-form ref="form" :model="validateForm" style="padding: 15px">
                 <p>吉林大学珠海学院教务系统-模拟登陆</p>
-
                 <mu-form-item label="教务系统账号" help-text="输入学号" prop="yhm" :rules="usernameRules">
                     <mu-text-field v-model="validateForm.yhm" prop="yhm"></mu-text-field>
                 </mu-form-item>
                 <mu-form-item label="密码" prop="mm" :rules="passwordRules">
                     <mu-text-field v-model="validateForm.mm" prop="mm"
                                    :action-icon="visibility ? 'visibility_off' : 'visibility'"
-                                   :action-click="() => (visibility = !visibility)"
-                                   :type="visibility ? 'text' : 'password'"></mu-text-field>
+                                   :action-click="()=>{this.visibility = !visibility}"
+                                   :type="visibility ? 'text' : 'password'">
+                    </mu-text-field>
                 </mu-form-item>
                 <mu-form-item prop="isAgree" :rules="argeeRules">
                     <mu-checkbox label="同意使用该模拟登陆服务" v-model="validateForm.isAgree"></mu-checkbox>
@@ -43,10 +43,8 @@
             </mu-dialog>
         </mu-flex>
         <over-lay :progress="progress"></over-lay>
-
     </div>
 </template>
-
 <script>
     import Overlay from "../components/Overlay";
 
@@ -56,7 +54,7 @@
 
         data() {
             return {
-                app_title: this.$store.state.app_title + '-绑定',
+                app_title: this.$store.state.theme.app_title + '-绑定',
                 nav_style: this.$store.getters.navStyle,
 
                 usernameRules: [

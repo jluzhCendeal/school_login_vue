@@ -1,10 +1,6 @@
-import Vue from "vue"
-import Vuex from "vuex"
+const host_name = process.env.VUE_APP_API
 
-Vue.use(Vuex)
-// noinspection JSValidateTypes
-const host_name = 'https://www.cendeal.cn:5001/jlu/api'
-const store = new Vuex.Store({
+const theme = {
     state: {
         app_title: '吉机',
         theme: {
@@ -30,17 +26,17 @@ const store = new Vuex.Store({
             }
         },
         url_paths: {
-            u_login: host_name+'/login',
-            u_schedule: host_name+'/querySchedule',
-            u_score: host_name+'/queryScore',
-            u_week: host_name+'/getCurrentWeek',
-            u_lines: host_name+'/getStuTimeLines',
-            u_auth: host_name+'/auth',
-            u_logout: host_name+'/logout',
-            u_head_pic:host_name+'/getPhoto'
+            u_login: host_name + '/login',
+            u_schedule: host_name + '/querySchedule',
+            u_score: host_name + '/queryScore',
+            u_week: host_name + '/getCurrentWeek',
+            u_lines: host_name + '/getStuTimeLines',
+            u_auth: host_name + '/auth',
+            u_logout: host_name + '/logout',
+            u_head_pic: host_name + '/getPhoto'
         },
         jluzh_courses: '',
-        current_week:1,
+        current_week: 1,
 
     },
     getters: {
@@ -86,26 +82,25 @@ const store = new Vuex.Store({
             if (theme.hasOwnProperty('head_pic_text_color'))
                 state.theme.head_text_style.color = theme.head_pic_text_color
         },
-        initTheme:function () {
-            let theme = localStorage.getItem('jluzh_theme')
-            if(theme != null || theme != undefined){
-                store.commit('updateTheme',JSON.parse(theme))
-            }
-        },
-        updateWeek:function (state,week) {
+        updateWeek: function (state, week) {
             state.current_week = week
         },
-        updateCourses:function (state,courses) {
-            if(courses==null){
+        updateCourses: function (state, courses) {
+            if (courses == null) {
                 delete localStorage['jluzh_courses']
                 delete localStorage['jluzh_current_week']
                 delete localStorage['jluzh_total_week']
             }
-
-
             state.jluzh_courses = courses
         }
     },
-    actions: {}
-})
-export default store
+    actions: {
+        initTheme: function ({commit}) {
+            let theme = localStorage.getItem('jluzh_theme')
+            if (theme) {
+                commit('updateTheme', JSON.parse(theme))
+            }
+        }
+    }
+}
+export default theme

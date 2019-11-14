@@ -58,7 +58,7 @@
         name: "CacheManager",
         data: function () {
             return {
-                app_title: this.$store.state.app_title + '-Cache',
+                app_title: this.$store.state.theme.app_title + '-Cache',
                 navStyle: this.$store.getters.navStyle,
                 jluzhLocalStorageInfo: this.$jluzhLocalStorage.info,
                 sessionStorageInfo:this.getSessionStorageInfo(),

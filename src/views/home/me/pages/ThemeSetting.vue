@@ -18,11 +18,10 @@
                 </mu-sub-header>
                 <mu-paper class="theme-paper" :z-depth="1">
                     <mu-row gutter>
-                        <mu-col v-for="v,k in themes.bar_colors " span="4">
+                        <mu-col v-for="(v,k) in themes.bar_colors " :key="k" span="4">
                             <mu-flex align-items="center">
                                 <mu-radio v-model="theme_config.nav_bg" :value="v"></mu-radio>
                                 <span :style="'width: 100%;height: 22px;background-color:'+v"></span>
-                                <!--<mu-button small color="success"></mu-button>-->
                             </mu-flex>
                         </mu-col>
                     </mu-row>
@@ -38,7 +37,7 @@
                 </mu-sub-header>
                 <mu-paper class="theme-paper" :z-depth="1">
                     <mu-row gutter>
-                        <mu-col v-for="v in themes.nav_text_colors " span="4">
+                        <mu-col v-for="(v,index) in themes.nav_text_colors " :key="index" span="4">
                             <mu-flex align-items="center">
                                 <mu-radio v-model="theme_config.nav_text_color" :value="v"></mu-radio>
                                 <span :style="'width: 100%;height: 22px;background-color:'+v"></span>
@@ -162,7 +161,7 @@
         name: "ThemeSetting",
         data: function () {
             return {
-                app_title: this.$store.state.app_title + '-主题',
+                app_title: this.$store.state.theme.app_title + '-主题',
 
                 themes: {
                     bar_colors: {
@@ -222,6 +221,7 @@
 
             initTheme: function () {
                 let state = this.$store.state
+                console.log(this.state)
                 let theme_config = this.theme_config
 
 

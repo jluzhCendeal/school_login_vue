@@ -1,14 +1,14 @@
 <template>
     <div class="me">
         <div class="head">
-            <mu-paper class="head-area" :z-depth="1" :style="head_pic_style">
+            <mu-paper class="head-area" :z-depth="1" :style="headPicStyle">
                 <mu-flex justify-content="center" align-items="center">
                     <mu-avatar style="width: 12vh;height: 12vh;margin: 2px"  size="20%">
                         <img  ref='head_pic' :src="head_pic">
                     </mu-avatar>
                 </mu-flex>
                 <mu-flex justify-content="center" align-items="center" style="padding: 2px">
-                    <span :style='head_text_style'>{{username}}</span>
+                    <span>{{username}}</span>
                 </mu-flex>
             </mu-paper>
 
@@ -54,19 +54,18 @@
 
 <script>
     import headPic from '@/assets/logo.jpg'
+    import {mapGetters} from 'vuex'
 
     export default {
         name: 'me',
         data: function () {
             return {
-                head_pic_style: this.$store.getters.headPicStyle,
-                head_text_style: this.$store.getters.headTextStyle,
                 username: localStorage.getItem('username'),
-                head_pic: this.$jluzhLocalStorage.getItem('token')?"https://www.cendeal.cn:5001/jlu/api/getPhoto?token="+this.$jluzhLocalStorage.getItem('token'):headPic
+                head_pic: this.$jluzhLocalStorage.getItem('token') ? `${process.env.VUE_APP_API}/getPhoto?token=${this.$jluzhLocalStorage.getItem('token')}` : headPic
             }
         },
-        mounted() {
-
+        computed: {
+            ...mapGetters(['headPicStyle', 'headTextStyle'])
         }
     }
 </script>

@@ -5,13 +5,9 @@
                 <mu-button flat @click="closeBottomSheet">菜单</mu-button>
             </mu-menu>
         </mu-appbar>
-
-
         <mu-list class="main">
                 <router-view></router-view>
         </mu-list>
-
-
         <div ref="nav" class="nav_bottom">
             <mu-bottom-nav :color="nav_active_color" :style="nav_style" :value.sync="shift">
                 <mu-bottom-nav-item value="schedule" title="课表" to="/jluzh/schedule" icon="view_list" replace>
@@ -82,11 +78,6 @@
                     grade: '',
                     term: '',
                 }
-            }
-        },
-        computed: {
-            height() {
-                return `${document.documentElement.clientHeight}`
             }
         },
         methods: {
@@ -165,7 +156,7 @@
             }
         },
         created() {
-            this.$store.commit('initTheme')
+            this.$store.dispatch('theme/initTheme')
         },
         mounted() {
             let shifts = this.$router.history.current.path

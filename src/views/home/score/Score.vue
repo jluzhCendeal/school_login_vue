@@ -122,12 +122,12 @@
 
             getGrade: function () {
                 let temp = this.$jluzhLocalStorage.getItem('score_selection')
-                if (temp != null || temp != undefined) {
+                if (temp) {
                     let selection = JSON.parse(temp)
                     this.setSelection(selection)
                 } else {
                     let is_login = sessionStorage.getItem('jluzh_is_login')
-                    if (is_login != null || is_login != undefined) {
+                    if (is_login) {
                         this.getSelection('callbackSelection')
                             .then(this.callbackSelection)
                     } else {
