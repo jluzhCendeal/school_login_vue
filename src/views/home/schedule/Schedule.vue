@@ -415,6 +415,7 @@
         text-align: left;
         width: 1%;
     }
+
     .table-center {
         width: 100vw;
         text-align: center;
@@ -423,6 +424,7 @@
     .table-date {
         font-size: x-small;
     }
+
     .course-row {
         background-color: lightgrey;
         color: white;

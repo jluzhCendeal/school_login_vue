@@ -51,7 +51,6 @@
     export default {
         name: "Login",
         components: {'over-lay': Overlay},
-
         data() {
             return {
                 app_title: this.$store.state.theme.app_title + '-绑定',

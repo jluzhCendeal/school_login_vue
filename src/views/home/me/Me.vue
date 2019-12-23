@@ -3,8 +3,8 @@
         <div class="head">
             <mu-paper class="head-area" :z-depth="1" :style="headPicStyle">
                 <mu-flex justify-content="center" align-items="center">
-                    <mu-avatar style="width: 12vh;height: 12vh;margin: 2px"  size="20%">
-                        <img  ref='head_pic' :src="head_pic">
+                    <mu-avatar style="width: 12vh;height: 12vh;margin: 2px" size="20%">
+                        <img ref='head_pic' :src="head_pic">
                     </mu-avatar>
                 </mu-flex>
                 <mu-flex justify-content="center" align-items="center" style="padding: 2px">
@@ -47,7 +47,6 @@
                 </mu-list>
             </div>
         </div>
-
     </div>
 
 </template>

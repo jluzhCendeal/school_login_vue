@@ -200,8 +200,8 @@
                         cute_pink: '#ec407a',
                         light_green: '#76ff03'
                     },
-                    float_btn_text_colors:{
-                        yellow:"yellow",
+                    float_btn_text_colors: {
+                        yellow: "yellow",
                         white: "white",
                         grey: '#757575',
                     }

@@ -17,7 +17,7 @@
                     </mu-list-item-title>
 
                     <mu-list-item-action>
-                        <mu-icon right value="delete"  v-on:click="cleanLocastorage"></mu-icon>
+                        <mu-icon right value="delete" v-on:click="cleanLocastorage"></mu-icon>
                     </mu-list-item-action>
                 </mu-list-item>
                 <mu-list-item-content>
@@ -61,7 +61,7 @@
                 app_title: this.$store.state.theme.app_title + '-Cache',
                 navStyle: this.$store.getters.navStyle,
                 jluzhLocalStorageInfo: this.$jluzhLocalStorage.info,
-                sessionStorageInfo:this.getSessionStorageInfo(),
+                sessionStorageInfo: this.getSessionStorageInfo(),
                 color_chip_for_loc: [],
                 color_chip_for_ses: []
             }
@@ -72,21 +72,21 @@
             getSessionStorageInfo: getSessionStorageInfo,
             cleanSessionStorege() {
                 sessionStorage.clear()
-                this.sessionStorageInfo=this.getSessionStorageInfo()
+                this.sessionStorageInfo = this.getSessionStorageInfo()
 
             },
             cleanLocastorage() {
                 this.$jluzhLocalStorage.clear()
-                this.jluzhLocalStorageInfo=this.$jluzhLocalStorage.info
+                this.jluzhLocalStorageInfo = this.$jluzhLocalStorage.info
             },
             randomColor: function () {
                 return '#' + (Math.floor(Math.random() * 0xffffff)).toString(16)
             },
-            removeSessionKey(index){
+            removeSessionKey(index) {
                 delete sessionStorage[this.sessionStorageInfo.keys[index]]
-                this.sessionStorageInfo=this.getSessionStorageInfo()
+                this.sessionStorageInfo = this.getSessionStorageInfo()
             },
-            removeLocKey(index){
+            removeLocKey(index) {
                 delete localStorage[this.jluzhLocalStorageInfo.keys[index]]
                 this.jluzhLocalStorageInfo = this.$jluzhLocalStorage.info
             }

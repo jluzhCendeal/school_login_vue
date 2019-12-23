@@ -6,7 +6,7 @@
             </mu-menu>
         </mu-appbar>
         <mu-list class="main">
-                <router-view></router-view>
+            <router-view></router-view>
         </mu-list>
         <div ref="nav" class="nav_bottom">
             <mu-bottom-nav :color="nav_active_color" :style="nav_style" :value.sync="shift">
@@ -52,8 +52,7 @@
 
 <script>
     import Selection from '@/components/Selection'
-    // 导入js
-    import {getSelection,loginjs} from "../../assets/util/jluzhRequest";
+    import {getSelection, loginjs} from "../../assets/util/jluzhRequest";
     import {getScheduleExpiration} from "../../assets/util/jluzhStoreExpiration";
 
     export default {
@@ -81,7 +80,7 @@
             }
         },
         methods: {
-            login:loginjs,
+            login: loginjs,
             getSelection: getSelection,
             getScheduleExpiration: getScheduleExpiration,
 
@@ -123,9 +122,9 @@
 
             //修改时间：2019/3/7
             nextDo() {
-                this.$jluzhLocalStorage.setItem('schedule_grade', this.user.grade + 1,this.getScheduleExpiration())
-                this.$jluzhLocalStorage.setItem('schedule_term', this.user.term + 1,this.getScheduleExpiration())
-                this.selection_dialog=false
+                this.$jluzhLocalStorage.setItem('schedule_grade', this.user.grade + 1, this.getScheduleExpiration())
+                this.$jluzhLocalStorage.setItem('schedule_term', this.user.term + 1, this.getScheduleExpiration())
+                this.selection_dialog = false
                 this.updateSchedule()
             },
 
@@ -142,13 +141,13 @@
                     } else {
                         let token = this.$jluzhLocalStorage.getItem('token')
                         if (token != null) {
-                            this.login(token,'callbackLogin')
+                            this.login(token, 'callbackLogin')
                                 .then(this.callbackLogin)
                                 .then(() => {
                                     this.getSelection().then(this.callbackSelection)
                                 })
-                        }else{
-                            this.selection_dialog=false
+                        } else {
+                            this.selection_dialog = false
                             this.$toast.info({message: '未绑定！', position: 'top'})
                         }
                     }
