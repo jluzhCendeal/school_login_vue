@@ -125,8 +125,6 @@
                                     } else {
                                         this.prePage()
                                     }
-
-
                                 }
                                 this.page.activate = this.mySwiper.activeIndex
                                 this.page.pre = this.mySwiper.previousIndex

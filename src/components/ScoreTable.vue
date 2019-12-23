@@ -60,8 +60,8 @@
         },
         methods: {
             deleteId(list){
-                for(let i in list){
-                    list[i].id =i
+                for (let i of list) {
+                    list[i].id = i
                 }
                 return list
             }

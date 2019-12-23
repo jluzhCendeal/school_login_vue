@@ -187,7 +187,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .score {
         margin-right: 8px;
         margin-left: 8px;

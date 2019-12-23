@@ -21,7 +21,7 @@
                                    :type="visibility ? 'text' : 'password'">
                     </mu-text-field>
                 </mu-form-item>
-                <mu-form-item prop="isAgree" :rules="argeeRules">
+                <mu-form-item prop="isAgree" :rules="agreeRules">
                     <mu-checkbox label="同意使用该模拟登陆服务" v-model="validateForm.isAgree"></mu-checkbox>
                 </mu-form-item>
                 <mu-flex justify-content="center" align-items="center" style="font-size: smaller">
@@ -65,7 +65,7 @@
                     {validate: (val) => !!val, message: '必须填写密码'}
 
                 ],
-                argeeRules: [{validate: (val) => !!val, message: '必须同意用户协议'}],
+                agreeRules: [{validate: (val) => !!val, message: '必须同意用户协议'}],
                 validateForm: {
                     yhm: localStorage.getItem('username'),
                     mm: '',

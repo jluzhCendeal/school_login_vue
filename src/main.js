@@ -8,7 +8,6 @@ import '@/assets/material-icons.css'
 import VueCookie from 'vue-cookie'
 
 import MuseUI from 'muse-ui'
-// import 'muse-ui/dist/muse-ui.css'
 import Toast from 'muse-ui-toast'
 
 import  NProgress  from 'muse-ui-progress'
@@ -27,7 +26,6 @@ Vue.use(NProgress)
 Vue.use(Toast)
 
 Vue.config.productionTip = false
-// NProgress.config({color:'yellow'})
 new Vue({
   Toast,
   VueCookie,

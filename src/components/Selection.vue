@@ -4,7 +4,7 @@
         <mu-row gutter>
             <mu-col fluid>
                 <mu-select label="年级" v-model="user.grade" full-width>
-                    <mu-option v-for="grade,index in grades" avatar :key="grade" :label="grade"
+                    <mu-option v-for="(grade,index) in grades" avatar :key="grade" :label="grade"
                                :value="index">
                         <mu-list-item-action avatar>
                             <mu-avatar :size="36" color="primary">
@@ -18,7 +18,7 @@
                 </mu-select>
 
                 <mu-select label="学期" v-model="user.term" full-width>
-                    <mu-option v-for="term,index in terms" avatar :key="term" :label="term"
+                    <mu-option v-for="(term,index) in terms" avatar :key="term" :label="term"
                                :value="index">
                         <mu-list-item-action avatar>
                             <mu-avatar :size="36" color="primary">
