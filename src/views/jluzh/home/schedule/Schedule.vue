@@ -62,8 +62,8 @@
     //导入vue组件
     import ScheduleDetailDialog from '@/components/ScheduleDetailDialog'
     // 导入js
-    import {getScheduleJs, loginjs, getCurrentWeek} from "../../../assets/util/jluzhRequest";
-    import {getScheduleExpiration, getCurrentWeekExpiration} from "../../../assets/util/jluzhStoreExpiration";
+    import {getScheduleJs, loginjs, getCurrentWeek} from "../../../../assets/util/jluzhRequest";
+    import {getScheduleExpiration, getCurrentWeekExpiration} from "../../../../assets/util/jluzhStoreExpiration";
 
 
     export default {

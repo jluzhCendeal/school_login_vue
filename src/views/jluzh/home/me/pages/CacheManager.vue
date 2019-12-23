@@ -52,7 +52,7 @@
 </template>
 
 <script>
-    import {getSessionStorageInfo} from "../../../../assets/util/jluzhSessionSorageInfo";
+    import {getSessionStorageInfo} from "../../../../../assets/util/jluzhSessionSorageInfo";
 
     export default {
         name: "CacheManager",

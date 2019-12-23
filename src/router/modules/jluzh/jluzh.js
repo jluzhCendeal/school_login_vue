@@ -1,25 +1,25 @@
 export default {
     path: '/jluzh',
-    component: () => import('@/views/home/Home'),
+    component: () => import('@/views/jluzh/home/Home'),
     children: [
         {
             path: 'score',
             meta: '查询成绩',
             token: true,
-            component: () => import('@/views/home/score/Score')
+            component: () => import('@/views/jluzh/home/score/Score')
         },
         {
             path: 'me',
             meta: '我',
             token: true,
-            component: () => import('@/views/home/me/Me'),
+            component: () => import('@/views/jluzh/home/me/Me'),
 
         },
         {
             path: 'schedule',
             meta: '查询课表',
             token: true,
-            component: () => import('@/views/home/schedule/Schedule')
+            component: () => import('@/views/jluzh/home/schedule/Schedule')
         }
 
     ]

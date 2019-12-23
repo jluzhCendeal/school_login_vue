@@ -52,8 +52,8 @@
 
 <script>
     import Selection from '@/components/Selection'
-    import {getSelection, loginjs} from "../../assets/util/jluzhRequest";
-    import {getScheduleExpiration} from "../../assets/util/jluzhStoreExpiration";
+    import {getSelection, loginjs} from "../../../assets/util/jluzhRequest";
+    import {getScheduleExpiration} from "../../../assets/util/jluzhStoreExpiration";
 
     export default {
         name: "Home",

@@ -39,8 +39,8 @@
     import Overlay from '@/components/Overlay'
 
     // 导入js
-    import {getSelection, getScore, loginjs} from "../../../assets/util/jluzhRequest";
-    import {getScheduleExpiration} from "../../../assets/util/jluzhStoreExpiration";
+    import {getSelection, getScore, loginjs} from "../../../../assets/util/jluzhRequest";
+    import {getScheduleExpiration} from "../../../../assets/util/jluzhStoreExpiration";
 
     export default {
         name: "Score",
